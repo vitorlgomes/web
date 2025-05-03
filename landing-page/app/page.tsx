@@ -3,11 +3,9 @@
 import Image from "next/image";
 import styles from "./styles.module.css";
 import React from "react";
-import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [planType, setPlanType] = React.useState<"mensal" | "anual">("mensal");
-  const router = useRouter();
 
   const prices = {
     mensal: { basic: "R$250", premium: "R$500" },

@@ -1,7 +1,17 @@
 "use client";
 
+import debounce from "lodash.debounce";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+import useSWR from "swr";
+
+import withAuth from "@/app/hooks/withAuth";
+import { Pagination } from "@/components/Pagination";
+import ProductRowMobile from "@/components/ProductRowMobile";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -10,17 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
-import debounce from "lodash.debounce";
+
 import { fetcher } from "../../hooks/fetcher";
-import withAuth from "@/app/hooks/withAuth";
-import { Pagination } from "@/components/Pagination";
 import { SessionProps } from "../orders/page";
-import { useMediaQuery } from "react-responsive";
-import ProductRowMobile from "@/components/ProductRowMobile";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export type Product = {
   name: string;
@@ -38,7 +40,7 @@ function ProductsPage(props: SessionProps) {
   const [searchValue, setSearchValue] = React.useState("");
   const [debouncedValue, setDebouncedValue] = React.useState("");
   const [pageIndex, setPageIndex] = useState(0);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasNextPage] = useState(false);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
   const perPage = 10;

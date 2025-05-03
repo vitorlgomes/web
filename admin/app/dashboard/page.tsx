@@ -1,16 +1,17 @@
 "use client";
 
-import DashboardCard from "@/components/DashboardCard";
-import { DashboardRevenueChart } from "@/components/DashboardRevenueChart";
-import useSWR from "swr";
-import withAuth from "../hooks/withAuth";
-import { fetcher } from "../hooks/fetcher";
-import { useMediaQuery } from "react-responsive";
-import { Context } from "./layout";
-import React from "react";
 import { Loader2, TrendingUp } from "lucide-react";
-import { CardTitle } from "@/components/ui/card";
+import React from "react";
+import { useMediaQuery } from "react-responsive";
+import useSWR from "swr";
+
+import DashboardCard from "@/components/DashboardCard";
 import CustomGraph from "@/components/Graph";
+import { CardTitle } from "@/components/ui/card";
+
+import { fetcher } from "../hooks/fetcher";
+import withAuth from "../hooks/withAuth";
+import { Context } from "./Context";
 
 type Response = {
   revenueByDay: RevenueData[];
@@ -97,15 +98,17 @@ function DashboardPage() {
       <div className="space-between md:flex-column flex lg:flex-row">
         <div className="mr-3 w-2/3 sm:w-full md:w-full">
           <CustomGraph
-            data={dashboardSummary?.revenueByDay ?? [
-              { date: "01/01", revenue: 1200 },
-              { date: "02/01", revenue: 1500 },
-              { date: "03/01", revenue: 1700 },
-              { date: "04/01", revenue: 1400 },
-              { date: "05/01", revenue: 1900 },
-              { date: "06/01", revenue: 2100 },
-              { date: "07/01", revenue: 2300 },
-            ]}
+            data={
+              dashboardSummary?.revenueByDay ?? [
+                { date: "01/01", revenue: 1200 },
+                { date: "02/01", revenue: 1500 },
+                { date: "03/01", revenue: 1700 },
+                { date: "04/01", revenue: 1400 },
+                { date: "05/01", revenue: 1900 },
+                { date: "06/01", revenue: 2100 },
+                { date: "07/01", revenue: 2300 },
+              ]
+            }
             title="Faturamento no Período"
             subtitle="01/01/2025 - 07/01/2025"
           />
@@ -115,8 +118,6 @@ function DashboardPage() {
             products={dashboardSummary?.top3MostSoldProducts || []}
           />
         </div>
-
-        {/* <DashboardPopularProductsChart /> */}
       </div>
     </>
   );
@@ -131,7 +132,7 @@ type Props = {
   products: Product[];
 };
 
-export function TopProductsCard({ products }: Props) {
+function TopProductsCard({ products }: Props) {
   return (
     <div className="h-full rounded-lg bg-[#FAF9F6] p-6">
       <CardTitle className="mb-6 font-nohemi text-base font-medium text-gray-800">

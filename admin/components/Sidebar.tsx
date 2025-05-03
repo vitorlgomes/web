@@ -1,20 +1,21 @@
 "use client";
 
+import { LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { useMediaQuery } from "react-responsive";
 
+import { Context } from "@/app/dashboard/Context";
+import supabaseClient from "@/app/hooks/supabaseClient";
 import LirioLogo from "@/assets/lirio-vector-logo.svg";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import supabaseClient from "@/app/hooks/supabaseClient";
-import { useMediaQuery } from "react-responsive";
-import { Context } from "@/app/dashboard/layout";
-import React from "react";
-import * as ShoppingBasket from "../assets/shopping-bag-black.svg";
+
 import * as DashboardLayout from "../assets/dashboard-line.svg";
-import * as Categories from "../assets/stack-fill.svg";
 import * as Sales from "../assets/money-dollar-circle-line.svg";
-import { LogOut } from "lucide-react";
+import * as ShoppingBasket from "../assets/shopping-bag-black.svg";
+import * as Categories from "../assets/stack-fill.svg";
 
 export function Sidebar() {
   const router = useRouter();

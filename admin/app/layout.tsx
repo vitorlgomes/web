@@ -2,8 +2,9 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "sonner";
 import localFont from "next/font/local";
+import { Suspense } from "react";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -35,7 +36,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${nohemi.variable} ${inter.variable}`}>
         <Toaster richColors />
-        {children}
+        <Suspense>{children}</Suspense>
       </body>
     </html>
   );
