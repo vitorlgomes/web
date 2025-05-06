@@ -5,6 +5,7 @@ import styles from "./styles.module.css";
 import React from "react";
 
 export default function Home() {
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const [planType, setPlanType] = React.useState<"mensal" | "anual">("mensal");
 
   const prices = {
@@ -24,12 +25,21 @@ export default function Home() {
             height={32}
             className={styles.logoIcon}
           />
-          <nav className={styles.navCustom}>
+          <nav
+            className={`${styles.navCustom} ${menuOpen ? styles.navOpen : ""}`}
+          >
             <a href="#solucoes">Soluções</a>
             <a href="#vantagens">Vantagens</a>
             <a href="#planos">Planos</a>
             <a href="#contato">Contato</a>
           </nav>
+          <button
+            className={styles.menuToggle}
+            aria-label="Abrir menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className={styles.menuIcon} />
+          </button>
         </div>
         <button className={styles.ctaHeaderCustom}>
           Transforme seu negócio
@@ -40,7 +50,7 @@ export default function Home() {
       <section className={styles.heroVideoSection}>
         <video
           className={styles.heroVideo}
-          src={"/hero.mp4"}
+          src={"/video.mp4"}
           autoPlay
           loop
           muted
