@@ -1,26 +1,26 @@
-import Image from 'next/image'
-import React, { useState } from 'react'
-import { UseFormRegister } from 'react-hook-form'
+import Image from "next/image";
+import React, { useState } from "react";
+import { UseFormRegister } from "react-hook-form";
 
-import UploaderIcon from '@/assets/upload.svg'
+import UploaderIcon from "@/assets/icons/upload.svg";
 
 interface FileInputProps {
-  onFileSelect: (file: File) => void
-  formAttrs?: ReturnType<UseFormRegister<any>>
-  errors: any
+  onFileSelect: (file: File) => void;
+  formAttrs?: ReturnType<UseFormRegister<any>>;
+  errors: any;
 }
 
 const FileInputWidget: React.FC<FileInputProps> = (props) => {
-  const [selectedFile, setSelectedFile] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
 
     if (file) {
-      setSelectedFile(URL.createObjectURL(file))
-      props.onFileSelect(file)
+      setSelectedFile(URL.createObjectURL(file));
+      props.onFileSelect(file);
     }
-  }
+  };
 
   return (
     <>
@@ -43,8 +43,8 @@ const FileInputWidget: React.FC<FileInputProps> = (props) => {
                     type="file"
                     {...props.formAttrs}
                     onChange={(event) => {
-                      handleFileChange(event)
-                      props.formAttrs?.onChange(event)
+                      handleFileChange(event);
+                      props.formAttrs?.onChange(event);
                     }}
                   />
                 </div>
@@ -57,7 +57,7 @@ const FileInputWidget: React.FC<FileInputProps> = (props) => {
                 src={selectedFile}
                 width={355}
                 height={260}
-                style={{ maxWidth: 355, maxHeight: 260, objectFit: 'contain' }}
+                style={{ maxWidth: 355, maxHeight: 260, objectFit: "contain" }}
               />
               <div className="mb-4" onClick={() => setSelectedFile(null)}>
                 Remover
@@ -70,7 +70,7 @@ const FileInputWidget: React.FC<FileInputProps> = (props) => {
         <span className="text-xs text-red-500">{props.errors.message}</span>
       )}
     </>
-  )
-}
+  );
+};
 
-export default FileInputWidget
+export default FileInputWidget;

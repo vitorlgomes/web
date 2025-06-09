@@ -12,10 +12,10 @@ import supabaseClient from "@/app/hooks/supabaseClient";
 import LirioLogo from "@/assets/lirio-vector-logo.svg";
 import { Button } from "@/components/ui/button";
 
-import * as DashboardLayout from "../assets/dashboard-line.svg";
-import * as Sales from "../assets/money-dollar-circle-line.svg";
-import * as ShoppingBasket from "../assets/shopping-bag-black.svg";
-import * as Categories from "../assets/stack-fill.svg";
+import * as DashboardLayout from "../assets/icons/dashboard-line.svg";
+import * as Sales from "../assets/icons/money-dollar-circle-line.svg";
+import * as ShoppingBasket from "../assets/icons/shopping-bag-black.svg";
+import * as Categories from "../assets/icons/stack-fill.svg";
 
 export function Sidebar() {
   const router = useRouter();

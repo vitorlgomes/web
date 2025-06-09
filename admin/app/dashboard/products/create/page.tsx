@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import axios from 'axios'
-import { Loader2, TrashIcon } from 'lucide-react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import React from 'react'
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2, TrashIcon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React from "react";
 import {
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
-} from 'react-hook-form'
-import { toast } from 'sonner'
-import useSWR from 'swr'
-import { z } from 'zod'
+} from "react-hook-form";
+import { toast } from "sonner";
+import useSWR from "swr";
+import { z } from "zod";
 
-import { fetcher } from '@/app/hooks/fetcher'
-import withAuth from '@/app/hooks/withAuth'
-import { Button, ButtonProps } from '@/components/ui/button'
-import FileInputWidget from '@/components/ui/file-input'
-import { FormInput } from '@/components/ui/form-input'
+import { fetcher } from "@/app/hooks/fetcher";
+import withAuth from "@/app/hooks/withAuth";
+import { Button, ButtonProps } from "@/components/ui/button";
+import FileInputWidget from "@/components/ui/file-input";
+import { FormInput } from "@/components/ui/form-input";
 import {
   Select,
   SelectContent,
@@ -29,32 +29,32 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import Title from '@/components/ui/title'
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import Title from "@/components/ui/title";
 
-import * as PlusIcon from '../../../../assets/plus-icon.svg'
-import { SessionProps } from '../../orders/page'
+import * as PlusIcon from "../../../../assets/icons/plus-icon.svg";
+import { SessionProps } from "../../orders/page";
 
-const MAX_FILE_SIZE = 50000000
+const MAX_FILE_SIZE = 50000000;
 const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-]
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const createProductForm = z.object({
   image: z
     .any()
-    .refine((files) => files?.length === 1, 'A imagem é obrigatória.')
+    .refine((files) => files?.length === 1, "A imagem é obrigatória.")
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `O tamanho máximo para imagens é de 5MB.`,
     )
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.',
+      ".jpg, .jpeg, .png and .webp files are accepted.",
     ),
   name: z.string().min(4),
   outOfStock: z.boolean().nullish(),
@@ -72,33 +72,33 @@ const createProductForm = z.object({
       }),
     )
     .nullish(),
-})
+});
 
-export type CreateProductForm = z.infer<typeof createProductForm>
+export type CreateProductForm = z.infer<typeof createProductForm>;
 
 const AddButton: React.FC<{
-  onClick: () => void
-  type: ButtonProps['type']
+  onClick: () => void;
+  type: ButtonProps["type"];
 }> = ({ onClick, type }) => {
   return (
     <button
       type={type}
       onClick={() => {
-        onClick()
+        onClick();
       }}
     >
       <Image src={PlusIcon} alt="Plus sign" width={26} height={26} />
     </button>
-  )
-}
+  );
+};
 
 const RemoveButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <button onClick={() => onClick()}>
       <TrashIcon width={13} height={13} />
     </button>
-  )
-}
+  );
+};
 
 function CreateProductPage(props: SessionProps) {
   const {
@@ -108,55 +108,55 @@ function CreateProductPage(props: SessionProps) {
     formState: { errors, isSubmitting },
   } = useForm<CreateProductForm>({
     resolver: zodResolver(createProductForm),
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
-  })
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'variants',
-  })
+    name: "variants",
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
   const { data: categories } = useSWR(
     props.shopId
       ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories?shopId=${props.shopId}`
       : null,
     fetcher,
-  )
+  );
 
   const onSubmit: SubmitHandler<CreateProductForm> = async (data) => {
-    const { discount, variants, image, ...validData } = data
+    const { discount, variants, image, ...validData } = data;
 
-    const formData = new FormData()
+    const formData = new FormData();
 
     for (const key in validData) {
       if (key && validData) {
         // @ts-expect-error
-        formData.append(key, validData[key])
+        formData.append(key, validData[key]);
       }
     }
     variants &&
       variants.length > 0 &&
-      (await formData.append('variants', JSON.stringify(variants)))
-    props.shopId && (await formData.append('shopId', `${props.shopId}`))
-    await formData.append('image', image[0])
+      (await formData.append("variants", JSON.stringify(variants)));
+    props.shopId && (await formData.append("shopId", `${props.shopId}`));
+    await formData.append("image", image[0]);
 
     await axios
       .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .catch((error) => {
         toast.error(
           `Erro ao salvar o produto, tente novamente ou entre em contato.`,
-        )
-        throw error
-      })
+        );
+        throw error;
+      });
 
-    toast.success(`Produto criado com sucesso!`)
-    return router.push('/dashboard/products')
-  }
+    toast.success(`Produto criado com sucesso!`);
+    return router.push("/dashboard/products");
+  };
 
   return (
     <>
@@ -171,8 +171,8 @@ function CreateProductPage(props: SessionProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <FileInputWidget
           errors={errors.image}
-          onFileSelect={() => console.log('Arquivo salvo.')}
-          formAttrs={register('image')}
+          onFileSelect={() => console.log("Arquivo salvo.")}
+          formAttrs={register("image")}
         />
 
         <div className="flex flex-col gap-4 sm:gap-8 lg:flex-row">
@@ -182,7 +182,7 @@ function CreateProductPage(props: SessionProps) {
                 label="Nome do Produto"
                 type="text"
                 placeholder="Nome do produto"
-                formAttrs={register('name')}
+                formAttrs={register("name")}
                 errors={errors.name}
               />
               <Controller
@@ -207,7 +207,7 @@ function CreateProductPage(props: SessionProps) {
                 label="Desconto"
                 type="number"
                 placeholder="Desconto"
-                formAttrs={register('discount', { valueAsNumber: true })}
+                formAttrs={register("discount", { valueAsNumber: true })}
                 errors={errors.discount}
               />
               <Controller
@@ -256,7 +256,7 @@ function CreateProductPage(props: SessionProps) {
                 label="Preço"
                 type="number"
                 placeholder="Preço"
-                formAttrs={register('price', { valueAsNumber: true })}
+                formAttrs={register("price", { valueAsNumber: true })}
                 errors={errors.price}
               />
             </div>
@@ -267,7 +267,7 @@ function CreateProductPage(props: SessionProps) {
               label="Descrição"
               type="textarea"
               placeholder="Descrição"
-              formAttrs={register('description')}
+              formAttrs={register("description")}
               errors={errors.description}
             />
           </div>
@@ -288,11 +288,11 @@ function CreateProductPage(props: SessionProps) {
                 type="button"
                 onClick={() => {
                   append({
-                    name: '',
-                    group: '',
+                    name: "",
+                    group: "",
                     additionalPrice: 0,
                     outOfStock: false,
-                  })
+                  });
                 }}
               />
             </div>
@@ -304,7 +304,7 @@ function CreateProductPage(props: SessionProps) {
                 <div className="mt-8">
                   <RemoveButton
                     onClick={() => {
-                      remove(index)
+                      remove(index);
                     }}
                   />
                 </div>
@@ -387,13 +387,13 @@ function CreateProductPage(props: SessionProps) {
             {isSubmitting ? (
               <Loader2 className="animate-spin" />
             ) : (
-              'Salvar alterações'
+              "Salvar alterações"
             )}
           </Button>
         </div>
       </form>
     </>
-  )
+  );
 }
 
-export default withAuth(CreateProductPage)
+export default withAuth(CreateProductPage);

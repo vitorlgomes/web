@@ -25,13 +25,17 @@ export default function withAuth(Component) {
 
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${data.session.user.email}?subdomain=${window.location.hostname}`,
-        )
+        ).catch((error) => {
+          console.error('Error fetching user validation:', error)
+          
+          return null
+        })
 
-        const validationObject = await response.data
+        const validationObject = await response?.data
 
         const isUserValid = validationObject?.isValid
 
-        if (!isUserValid) return router.push('/auth?redirectReason=405')
+        if (!isUserValid) return router.push('/?redirectReason=405')
 
         return data?.session?.user
       }

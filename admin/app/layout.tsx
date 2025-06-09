@@ -11,11 +11,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const nohemi = localFont({
   src: [
     {
-      path: "../assets/Nohemi-Regular.otf",
+      path: "../assets/fonts/Nohemi-Regular.otf",
       weight: "400",
     },
     {
-      path: "../assets/Nohemi-Medium.otf",
+      path: "../assets/fonts/Nohemi-Medium.otf",
       weight: "500",
     },
   ],
