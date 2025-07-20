@@ -13,11 +13,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { toast } from "sonner";
-import useSWR from "swr";
 import { z } from "zod";
-
-import { fetcher } from "@/app/hooks/fetcher";
-import withAuth from "@/app/hooks/withAuth";
 import { Button, ButtonProps } from "@/components/ui/button";
 import FileInputWidget from "@/components/ui/file-input";
 import { FormInput } from "@/components/ui/form-input";
@@ -32,11 +28,13 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import Title from "@/components/ui/title";
-
-import * as PlusIcon from "../../../../assets/icons/plus-icon.svg";
+import useSWR from "swr";
+import * as PlusIcon from "../../../../assets/plus-icon.svg";
+import { fetcher } from "@/app/hooks/fetcher";
+import withAuth from "@/app/hooks/withAuth";
 import { SessionProps } from "../../orders/page";
 
-const MAX_FILE_SIZE = 50000000;
+const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -47,10 +45,10 @@ const ACCEPTED_IMAGE_TYPES = [
 const createProductForm = z.object({
   image: z
     .any()
-    .refine((files) => files?.length === 1, "A imagem é obrigatória.")
+    .refine((files) => files?.length == 1, "A imagem é obrigatória.")
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `O tamanho máximo para imagens é de 5MB.`,
+      `O tamanho máximo para imagens é de 1MB.`,
     )
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
@@ -133,7 +131,7 @@ function CreateProductPage(props: SessionProps) {
 
     for (const key in validData) {
       if (key && validData) {
-        // @ts-expect-error
+        // @ts-ignore
         formData.append(key, validData[key]);
       }
     }
@@ -164,8 +162,8 @@ function CreateProductPage(props: SessionProps) {
       <p className="w-full text-sm font-normal text-[#6d726d] sm:w-[515px]">
         Crie um novo produto preenchendo as informações abaixo. Apenas produtos
         em estoque estarão disponíveis na loja. Certifique-se que a imagem
-        possui um tamanho de 235x190 para garantir que ela seja exibida
-        corretamente.
+        possui um formato landscape. Ao inserir a imagem, você conseguirá
+        confirmar a pré-visualização.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -228,16 +226,14 @@ function CreateProductPage(props: SessionProps) {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Opções</SelectLabel>
-                          {categories?.map(
-                            (category: { id: number; name: string }) => (
-                              <SelectItem
-                                key={category.id}
-                                value={category.id.toString()}
-                              >
-                                {category.name}
-                              </SelectItem>
-                            ),
-                          )}
+                          {categories?.map((category: any) => (
+                            <SelectItem
+                              key={category.id}
+                              value={category.id.toString()}
+                            >
+                              {category.name}
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>

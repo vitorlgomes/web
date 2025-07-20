@@ -2,17 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import debounce from "lodash.debounce";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import useSWR from "swr";
 import { z } from "zod";
 
-import { fetcher } from "@/app/hooks/fetcher";
-import withAuth from "@/app/hooks/withAuth";
-import { Pagination } from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +28,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import withAuth from "@/app/hooks/withAuth";
+import debounce from "lodash.debounce";
+import useSWR from "swr";
+import { fetcher } from "@/app/hooks/fetcher";
+import { Pagination } from "@/components/Pagination";
 import { SessionProps } from "../orders/page";
 
 const createCategorySchema = z.object({
@@ -42,7 +41,7 @@ const createCategorySchema = z.object({
 
 type CreateCategoryForm = z.infer<typeof createCategorySchema>;
 
-export interface Category {
+interface Category {
   id: number;
   name: string;
   createdAt: string;

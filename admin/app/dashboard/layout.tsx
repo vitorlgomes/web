@@ -1,14 +1,16 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
-
 import { Sidebar } from "@/components/Sidebar";
-import { Context } from "./Context";
+import React, { SetStateAction, Dispatch } from "react";
 
-export type State = {
+type State = {
   isOpen: boolean;
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
 };
+
+export const Context = React.createContext<State>({
+  isOpen: false,
+});
 
 export default function DashboardLayout({
   children,
@@ -17,7 +19,7 @@ export default function DashboardLayout({
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <Context.Provider value={{ isOpen, setIsOpen }}>
+    <Context.Provider value={{ isOpen: isOpen, setIsOpen }}>
       <div className="flex h-screen gap-6 bg-[#FCFBF7]">
         <Sidebar />
         <main className="m-2 flex w-full flex-col gap-6 overflow-y-auto rounded-lg border border-[#DAE5DA] bg-white p-8 md:m-4 lg:m-8">

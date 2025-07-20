@@ -1,13 +1,19 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-// Check if the client has already been created to avoid multiple instances
-let supabaseClient: SupabaseClient | null = null
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_BASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY!;
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_BASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY!
-
-if (!supabaseClient) {
-  supabaseClient = createClient(supabaseUrl, supabaseKey)
+// Use a global variable to persist the client across hot reloads
+declare global {
+  // eslint-disable-next-line no-var
+  var supabaseClient: SupabaseClient | undefined;
 }
 
-export default supabaseClient
+const client =
+  globalThis.supabaseClient || createClient(supabaseUrl, supabaseKey);
+
+if (!globalThis.supabaseClient) {
+  globalThis.supabaseClient = client;
+}
+
+export default client;

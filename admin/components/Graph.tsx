@@ -1,17 +1,18 @@
 import React from "react";
 import {
-  Area,
   AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
+  Area,
   XAxis,
   YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
 type Props = {
   data: { date: string; revenue: number }[];
   title: string;
+  subtitle: string;
 };
 
 // Custom Tooltip Component
@@ -34,7 +35,7 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function CustomGraph({ data, title }: Props) {
+export default function CustomGraph({ data, title, subtitle }: Props) {
   const finalDala = data.map((item) => ({
     date: item.date,
     value: item.revenue,
@@ -47,6 +48,7 @@ export default function CustomGraph({ data, title }: Props) {
         <span className="font-nohemi text-base font-medium text-[#005930]">
           {title}
         </span>
+        <p className="font-inter text-sm text-[#6D736D]">{subtitle}</p>
       </div>
 
       {/* Chart */}

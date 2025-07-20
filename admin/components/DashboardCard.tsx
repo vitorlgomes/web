@@ -1,10 +1,9 @@
-import Image from "next/image";
-
-import * as InstitutionalIcon from "../assets/icons/institutional.svg";
-import * as OrderIcon from "../assets/icons/orders.svg";
-import * as ShoppingBasket from "../assets/icons/shopping-bag.svg";
-import * as TimeIcon from "../assets/icons/time.svg";
 import { Card } from "./ui/card";
+import Image from "next/image";
+import * as ShoppingBasket from "../assets/shopping-bag.svg";
+import * as OrderIcon from "../assets/orders.svg";
+import * as InstitutionalIcon from "../assets/institutional.svg";
+import * as TimeIcon from "../assets/time.svg";
 
 type Props = {
   title: string;

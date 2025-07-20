@@ -1,21 +1,20 @@
-'use client'
+"use client";
 
-import { Dispatch, SetStateAction } from 'react'
-
-import { Input } from '@/components/ui/input'
+import { Input } from "@/components/ui/input";
+import { Dispatch, SetStateAction } from "react";
 
 type SearchState = {
-  value?: string
-  setValue?: Dispatch<SetStateAction<string>>
-  setDebouncedValue?: (value: string) => unknown
-}
+  value?: string;
+  setValue?: Dispatch<SetStateAction<string>>;
+  setDebouncedValue?: (value: string) => unknown;
+};
 
 type Props = {
-  state?: SearchState
-}
+  state?: SearchState;
+};
 
 export default function SearchBar(props: Props) {
-  const { state } = props
+  const { state } = props;
 
   return (
     <div className="w-6/6 relative max-w-lg md:w-5/6 lg:w-3/6">
@@ -36,15 +35,15 @@ export default function SearchBar(props: Props) {
       <Input
         type="text"
         onChange={(e) => {
-          state?.setValue && state.setValue(e.target.value)
+          state?.setValue && state.setValue(e.target.value);
 
           return (
             state?.setDebouncedValue && state.setDebouncedValue(e.target.value)
-          )
+          );
         }}
         placeholder="Pesquisar itens específicos"
         className="w-full bg-[#F1F7F2] pl-10 opacity-100"
       />
     </div>
-  )
+  );
 }

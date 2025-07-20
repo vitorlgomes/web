@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   CartesianGrid,
@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
   XAxis,
   YAxis,
-} from 'recharts'
+} from "recharts";
 
 import {
   Card,
@@ -15,17 +15,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card";
 
 type RevenueData = {
-  date: string
-  revenue: number
-  isToday: boolean
-}
+  date: string;
+  revenue: number;
+  isToday: boolean;
+};
 
 type Props = {
-  data?: Array<RevenueData>
-}
+  data?: Array<RevenueData>;
+};
 
 export function DashboardRevenueChart(props: Props) {
   return (
@@ -50,9 +50,9 @@ export function DashboardRevenueChart(props: Props) {
               tickLine={false}
               width={80}
               tickFormatter={(value: number) =>
-                value.toLocaleString('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
+                value.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
                 })
               }
             />
@@ -67,5 +67,5 @@ export function DashboardRevenueChart(props: Props) {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

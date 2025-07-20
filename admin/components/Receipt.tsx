@@ -1,13 +1,12 @@
-import React from 'react'
-
-import { Order } from '@/app/dashboard/orders/page'
+import { Order } from "@/app/dashboard/orders/page";
+import React from "react";
 
 type Props = {
-  orders: Order[]
-}
+  orders: Order[];
+};
 
 const Receipt = (props: Props) => {
-  const { orders } = props
+  const { orders } = props;
 
   return (
     <>
@@ -22,8 +21,8 @@ const Receipt = (props: Props) => {
             </div>
             <div className="mb-4">
               {order.products.map((item, index) => {
-                const [productName, productPrice] = item.name.split(':R$')
-                const price = parseFloat(productPrice).toFixed(2)
+                const [productName, productPrice] = item.name.split(":R$");
+                const price = parseFloat(productPrice).toFixed(2);
 
                 return (
                   <div
@@ -34,15 +33,15 @@ const Receipt = (props: Props) => {
                       {item.quantity}x {productName}
                     </span>
 
-                    <span>R$ {price.replace('.', ',')}</span>
+                    <span>R$ {price.replace(".", ",")}</span>
                   </div>
-                )
+                );
               })}
             </div>
             <div className="my-4 border-t border-dashed"></div>
             <div className="flex justify-between font-medium text-gray-700">
               <span>Total</span>
-              <span>R$ {order.totalValue.toFixed(2).replace('.', ',')}</span>
+              <span>R$ {order.totalValue.toFixed(2).replace(".", ",")}</span>
             </div>
             <div className="my-4 border-t border-dashed"></div>
             <div className="mb-2 text-center text-xl text-green-600">
@@ -50,13 +49,13 @@ const Receipt = (props: Props) => {
             </div>
             <div className="text-center text-xs text-gray-500">
               <p>{`Pedido ${order.id}`}</p>
-              <p>{new Date(order.createdAt).toLocaleString('pt-BR')}</p>
+              <p>{new Date(order.createdAt).toLocaleString("pt-BR")}</p>
             </div>
           </div>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
-export default Receipt
+export default Receipt;

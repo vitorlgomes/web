@@ -1,8 +1,7 @@
-import Image from "next/image";
 import React, { useState } from "react";
+import Image from "next/image";
+import UploaderIcon from "@/assets/upload.svg";
 import { UseFormRegister } from "react-hook-form";
-
-import UploaderIcon from "@/assets/icons/upload.svg";
 
 interface FileInputProps {
   onFileSelect: (file: File) => void;
@@ -53,11 +52,15 @@ const FileInputWidget: React.FC<FileInputProps> = (props) => {
           ) : (
             <div className="mb-4">
               <Image
-                alt="Uploaded image"
+                alt="Uploaded image at 235x190"
                 src={selectedFile}
-                width={355}
-                height={260}
-                style={{ maxWidth: 355, maxHeight: 260, objectFit: "contain" }}
+                width={235}
+                height={190}
+                style={{
+                  maxWidth: 355,
+                  maxHeight: 260,
+                  objectFit: "contain",
+                }}
               />
               <div className="mb-4" onClick={() => setSelectedFile(null)}>
                 Remover

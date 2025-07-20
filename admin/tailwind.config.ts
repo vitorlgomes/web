@@ -19,8 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        nohemi: ['var(--font-nohemi)'],
-        inter: ['var(--font-inter)'],
+        nohemi: ["var(--font-nohemi)"],
+        inter: ["var(--font-inter)"],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -33,8 +33,8 @@ const config = {
           foreground: 'hsl(var(--primary-foreground))',
         },
         darkGrey: {
-          DEFAULT: 'hsl(var(--dark-grey))',
-          foreground: 'hsl(var(--dark-grey))',
+          DEFAULT: "hsl(var(--dark-grey))",
+          foreground: "hsl(var(--dark-grey))",
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

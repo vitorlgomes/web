@@ -1,16 +1,14 @@
 "use client";
 
-import axios from "axios";
+import React, { useState, FormEvent } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import React, { FormEvent, useState } from "react";
-
 import LirioLogo from "@/assets/lirio-vector.svg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import { useSearchParams } from "next/navigation";
 import supabaseClient from "./hooks/supabaseClient";
+import axios from "axios";
 
 // Define types for state
 interface Message {

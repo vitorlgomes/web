@@ -1,17 +1,7 @@
 "use client";
 
-import debounce from "lodash.debounce";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
-import useSWR from "swr";
-
-import withAuth from "@/app/hooks/withAuth";
-import { Pagination } from "@/components/Pagination";
-import ProductRowMobile from "@/components/ProductRowMobile";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -20,13 +10,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import useSWR from "swr";
+import debounce from "lodash.debounce";
 import { fetcher } from "../../hooks/fetcher";
+import withAuth from "@/app/hooks/withAuth";
+import { Pagination } from "@/components/Pagination";
 import { SessionProps } from "../orders/page";
-import { Category } from "../categories/page";
+import { useMediaQuery } from "react-responsive";
+import ProductRowMobile from "@/components/ProductRowMobile";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export type Product = {
-  id: number;
   name: string;
   category: { name: string };
   outOfStock: boolean;
@@ -35,13 +31,10 @@ export type Product = {
 };
 
 function ProductsPage(props: SessionProps) {
-  const [mounted, setMounted] = React.useState(false);
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
   });
-  const [categorySelected, setCategorySelected] = React.useState<
-    number | undefined
-  >(undefined);
+  const [categorySelected, setCategorySelected] = React.useState(undefined);
   const [searchValue, setSearchValue] = React.useState("");
   const [debouncedValue, setDebouncedValue] = React.useState("");
   const [pageIndex, setPageIndex] = useState(0);
@@ -60,7 +53,7 @@ function ProductsPage(props: SessionProps) {
     setDebouncedValue(value);
   }, 500);
 
-  const { data: products } = useSWR(
+  const { data: products, isValidating: loadingProductsData } = useSWR(
     () =>
       (debouncedValue && debouncedValue !== searchValue) || !props.shopId
         ? null
@@ -80,17 +73,8 @@ function ProductsPage(props: SessionProps) {
   );
 
   useEffect(() => {
-    if (products) {
-      setHasNextPage(products.length === perPage);
-      setLoadingProducts(false);
-    }
-  }, [products]);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+    setLoadingProducts(loadingProductsData);
+  }, [loadingProductsData]);
 
   return (
     <>
@@ -121,20 +105,18 @@ function ProductsPage(props: SessionProps) {
           >
             Todas os produtos
           </Button>
-          <div className="w-100 flex overflow-auto">
-            {categories?.map((category: Category) => {
-              return (
-                <Button
-                  onClick={() => setCategorySelected(category.id)}
-                  size="sm"
-                  variant="ghost"
-                  className={`rounded-full ${categorySelected === category.id ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
-                >
-                  {category.name}
-                </Button>
-              );
-            })}
-          </div>
+          {categories?.map((category: any) => {
+            return (
+              <Button
+                onClick={() => setCategorySelected(category.id)}
+                size="sm"
+                variant="ghost"
+                className={`rounded-full ${categorySelected === category.id ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
+              >
+                {category.name}
+              </Button>
+            );
+          })}
         </div>
         {loadingProducts ? (
           <>
@@ -160,7 +142,7 @@ function ProductsPage(props: SessionProps) {
           </>
         ) : (
           <>
-            {!mounted ? null : !isMobile ? (
+            {!isMobile ? (
               <Table>
                 <TableHeader className="bg-[#F1F7F2]">
                   <TableRow className="hover:bg-transparent">
@@ -174,7 +156,7 @@ function ProductsPage(props: SessionProps) {
                 <TableBody>
                   {products?.map((product: Product, i: number) => {
                     return (
-                      <TableRow key={product.id} className="hover:bg-[#f1f7f2]">
+                      <TableRow key={i} className="hover:bg-[#f1f7f2]">
                         <TableCell>{product.name}</TableCell>
                         <TableCell>
                           <span className="rounded-full bg-[#005930]/20 p-2 font-semibold text-[#005930]">

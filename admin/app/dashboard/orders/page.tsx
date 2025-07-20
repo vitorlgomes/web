@@ -1,15 +1,13 @@
 "use client";
 
 import axios from "axios";
-import debounce from "lodash.debounce";
 import React, { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
 import { toast } from "sonner";
+
+import { Pagination } from "@/components/Pagination";
 
 import withAuth from "@/app/hooks/withAuth";
 import { OrderTableRow } from "@/components/OrderTableRow";
-import { Pagination } from "@/components/Pagination";
-import Receipt from "@/components/Receipt";
 import SearchBar from "@/components/SearchBar";
 import {
   Table,
@@ -18,6 +16,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import debounce from "lodash.debounce";
+import { useMediaQuery } from "react-responsive";
+import Receipt from "@/components/Receipt";
 
 interface Product {
   id: number;
