@@ -1,85 +1,84 @@
-"use client";
+'use client'
 
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
+import axios from 'axios'
+import debounce from 'lodash.debounce'
+import React, { useEffect, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
+import { toast } from 'sonner'
 
-import { Pagination } from "@/components/Pagination";
-
-import withAuth from "@/app/hooks/withAuth";
-import { OrderTableRow } from "@/components/OrderTableRow";
-import SearchBar from "@/components/SearchBar";
+import withAuth from '@/app/hooks/withAuth'
+import { OrderTableRow } from '@/components/OrderTableRow'
+import { Pagination } from '@/components/Pagination'
+import Receipt from '@/components/Receipt'
+import SearchBar from '@/components/SearchBar'
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import debounce from "lodash.debounce";
-import { useMediaQuery } from "react-responsive";
-import Receipt from "@/components/Receipt";
+} from '@/components/ui/table'
 
 interface Product {
-  id: number;
-  name: string;
-  quantity: number;
+  id: number
+  name: string
+  quantity: number
 }
 
 export interface Order {
-  id: number;
-  totalValue: number;
-  createdAt: string;
-  status: string;
-  userName: string;
-  products: Product[];
+  id: number
+  totalValue: number
+  createdAt: string
+  status: string
+  userName: string
+  products: Product[]
 }
 
 export type SessionProps = {
-  shopId: number;
-};
+  shopId: number
+}
 
 function OrdersPage(props: SessionProps) {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loadingOrders, setLoadingOrders] = useState(true);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [hasNextPage, setHasNextPage] = useState(false);
-  const [searchValue, setSearchValue] = React.useState("");
-  const [debouncedValue, setDebouncedValue] = React.useState("");
-  const perPage = 10;
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loadingOrders, setLoadingOrders] = useState(true)
+  const [pageIndex, setPageIndex] = useState(0)
+  const [hasNextPage, setHasNextPage] = useState(false)
+  const [searchValue, setSearchValue] = React.useState('')
+  const [debouncedValue, setDebouncedValue] = React.useState('')
+  const perPage = 10
   const isMobile = useMediaQuery({
-    query: "(max-width: 768px)",
-  });
+    query: '(max-width: 768px)',
+  })
 
-  let ordersURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders?shopId=${props.shopId}`;
+  let ordersURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orders?shopId=${props.shopId}`
 
   const debouncedSearch = debounce((value: string) => {
-    setDebouncedValue(value);
-  }, 500);
+    setDebouncedValue(value)
+  }, 500)
 
-  if (debouncedValue) ordersURL += `&search=${debouncedValue}`;
+  if (debouncedValue) ordersURL += `&search=${debouncedValue}`
 
   useEffect(() => {
     const fetchOrders = async () => {
-      setLoadingOrders(true);
+      setLoadingOrders(true)
       try {
         const response = await axios.get(ordersURL, {
           params: {
             page: pageIndex,
             limit: perPage,
           },
-        });
-        setOrders(response.data);
-        setHasNextPage(response.data.length === perPage);
+        })
+        setOrders(response.data)
+        setHasNextPage(response.data.length === perPage)
       } catch (error) {
-        toast.error("Erro ao carregar pedidos");
+        toast.error('Erro ao carregar pedidos')
       } finally {
-        setLoadingOrders(false);
+        setLoadingOrders(false)
       }
-    };
+    }
 
-    props.shopId && fetchOrders();
-  }, [pageIndex, debouncedValue, props.shopId]);
+    props.shopId && fetchOrders()
+  }, [pageIndex, debouncedValue, props.shopId])
 
   return (
     <>
@@ -127,7 +126,7 @@ function OrdersPage(props: SessionProps) {
         onPageChange={(newPage) => setPageIndex(newPage)}
       />
     </>
-  );
+  )
 }
 
-export default withAuth(OrdersPage);
+export default withAuth(OrdersPage)

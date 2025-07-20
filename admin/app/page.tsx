@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import axios from "axios";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import React, { FormEvent, Suspense, useState } from "react";
+
 import LirioLogo from "@/assets/lirio-vector.svg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSearchParams } from "next/navigation";
+
 import supabaseClient from "./hooks/supabaseClient";
-import axios from "axios";
 
 // Define types for state
 interface Message {
@@ -16,7 +18,7 @@ interface Message {
   type: "error" | "success" | "info";
 }
 
-const MagicLinkAuth: React.FC = () => {
+const MagicLinkAuthContent: React.FC = () => {
   const params = useSearchParams();
 
   const redirectReason = params.get("redirectReason");
@@ -24,7 +26,8 @@ const MagicLinkAuth: React.FC = () => {
   const [message, setMessage] = useState<Message | null>(null); // State for messages (success, error)
   const [loading, setLoading] = useState<boolean>(false); // State for loading spinner
 
-  const codeIsExpired = window.location.href.includes("expired");
+  const codeIsExpired =
+    typeof window !== "undefined" && window.location.href.includes("expired");
 
   React.useEffect(() => {
     async function setSession() {
@@ -168,6 +171,14 @@ const MagicLinkAuth: React.FC = () => {
         </div>
       </main>
     </>
+  );
+};
+
+const MagicLinkAuth: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MagicLinkAuthContent />
+    </Suspense>
   );
 };
 

@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
 import {
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
   Table,
   TableBody,
@@ -14,24 +14,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
 interface Product {
-  id: number;
-  name: string;
-  quantity: number;
+  id: number
+  name: string
+  quantity: number
 }
 
 interface Order {
-  id: number;
-  totalValue: number;
-  createdAt: string;
-  status: string;
-  products: Product[];
+  id: number
+  totalValue: number
+  createdAt: string
+  status: string
+  products: Product[]
 }
 
 interface OrderDetailsProps {
-  order: Order;
+  order: Order
 }
 
 export function OrderDetails({ order }: OrderDetailsProps) {
@@ -39,17 +39,17 @@ export function OrderDetails({ order }: OrderDetailsProps) {
     (acc, product) =>
       acc +
       product.quantity *
-        parseFloat(product.name.split(":R$")[1].replace(",", ".")),
+        parseFloat(product.name.split(':R$')[1].replace(',', '.')),
     0,
-  );
+  )
 
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Pedido: {order.id}</DialogTitle>
         <DialogDescription>
-          Detalhes do pedido realizado em{" "}
-          {new Date(order.createdAt).toLocaleDateString("pt-BR")}
+          Detalhes do pedido realizado em{' '}
+          {new Date(order.createdAt).toLocaleDateString('pt-BR')}
         </DialogDescription>
       </DialogHeader>
       <Table>
@@ -63,29 +63,29 @@ export function OrderDetails({ order }: OrderDetailsProps) {
         </TableHeader>
         <TableBody>
           {order.products.map((product, index) => {
-            const [productName, productPrice] = product.name.split(":R$");
-            const price = parseFloat(productPrice.replace(",", "."));
+            const [productName, productPrice] = product.name.split(':R$')
+            const price = parseFloat(productPrice.replace(',', '.'))
             return (
               <TableRow key={index}>
                 <TableCell>{productName}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell className="p-2">
-                  R$ {price.toFixed(2).replace(".", ",")}
+                  R$ {price.toFixed(2).replace('.', ',')}
                 </TableCell>
                 <TableCell>
-                  R$ {(price * product.quantity).toFixed(2).replace(".", ",")}
+                  R$ {(price * product.quantity).toFixed(2).replace('.', ',')}
                 </TableCell>
               </TableRow>
-            );
+            )
           })}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
-            <TableCell>R$ {totalValue.toFixed(2).replace(".", ",")}</TableCell>
+            <TableCell>R$ {totalValue.toFixed(2).replace('.', ',')}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
     </DialogContent>
-  );
+  )
 }
