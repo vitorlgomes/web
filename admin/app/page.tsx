@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { FormEvent, Suspense, useState } from "react";
 
 import LirioLogo from "@/assets/lirio-vector.svg";
@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 
 import supabaseClient from "./hooks/supabaseClient";
 
-// Define types for state
 interface Message {
   text: string;
   type: "error" | "success" | "info";
@@ -25,12 +24,23 @@ const MagicLinkAuthContent: React.FC = () => {
   const [email, setEmail] = useState<string>(""); // State for the email input
   const [message, setMessage] = useState<Message | null>(null); // State for messages (success, error)
   const [loading, setLoading] = useState<boolean>(false); // State for loading spinner
+  const router = useRouter();
 
   const codeIsExpired =
     typeof window !== "undefined" && window.location.href.includes("expired");
 
   React.useEffect(() => {
-    async function setSession() {
+    async function checkSession() {
+      const { data } = await supabaseClient?.auth.getSession();
+      const userData = data?.session?.user;
+      const auth = !!userData;
+
+      if (auth) {
+        return router.push("/dashboard");
+      }
+    }
+
+    async function setSessionIfAvailable() {
       const accessToken = params.get("access_token");
       const refreshToken = params.get("refresh_token");
       if (accessToken && refreshToken) {
@@ -41,7 +51,8 @@ const MagicLinkAuthContent: React.FC = () => {
       }
     }
 
-    setSession();
+    checkSession();
+    setSessionIfAvailable();
   }, []);
 
   // Handle form submission for sending the Magic Link
@@ -80,7 +91,7 @@ const MagicLinkAuthContent: React.FC = () => {
         email,
         options: {
           shouldCreateUser: false,
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_HOST}/dashboard`, // Redirect URL after successful login (optional)
+          emailRedirectTo: process.env.NEXT_PUBLIC_HOST, // Redirect URL after successful login (optional)
         },
       });
 

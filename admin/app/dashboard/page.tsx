@@ -100,7 +100,6 @@ function DashboardPage() {
           <CustomGraph
             data={dashboardSummary?.revenueByDay ?? []}
             title="Faturamento no Período"
-            subtitle="01/01/2025 - 07/01/2025"
           />
         </div>
         <div className="md:w-full lg:w-1/3">

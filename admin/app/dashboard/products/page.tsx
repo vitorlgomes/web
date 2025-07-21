@@ -2,6 +2,7 @@
 
 import debounce from "lodash.debounce";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import useSWR from "swr";
@@ -26,6 +27,7 @@ import { fetcher } from "../../hooks/fetcher";
 import { SessionProps } from "../orders/page";
 
 function ProductsPage(props: SessionProps) {
+  const router = useRouter();
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
   });
@@ -91,27 +93,30 @@ function ProductsPage(props: SessionProps) {
       />
 
       <div className="rounded-md border">
-        <div className="flex items-center gap-4 p-2">
-          <Button
-            onClick={() => setCategorySelected(undefined)}
-            size="sm"
-            variant="ghost"
-            className={`rounded-full ${!categorySelected ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
-          >
-            Todas os produtos
-          </Button>
-          {categories?.map((category: any) => {
-            return (
-              <Button
-                onClick={() => setCategorySelected(category.id)}
-                size="sm"
-                variant="ghost"
-                className={`rounded-full ${categorySelected === category.id ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
-              >
-                {category.name}
-              </Button>
-            );
-          })}
+        <div className="overflow-x-auto">
+          <div className="flex min-w-max items-center gap-4 p-2">
+            <Button
+              onClick={() => setCategorySelected(undefined)}
+              size="sm"
+              variant="ghost"
+              className={`whitespace-nowrap rounded-full ${!categorySelected ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
+            >
+              Todas os produtos
+            </Button>
+            {categories?.map((category: any) => {
+              return (
+                <Button
+                  key={category.id}
+                  onClick={() => setCategorySelected(category.id)}
+                  size="sm"
+                  variant="ghost"
+                  className={`whitespace-nowrap rounded-full ${categorySelected === category.id ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
+                >
+                  {category.name}
+                </Button>
+              );
+            })}
+          </div>
         </div>
         {loadingProducts ? (
           <>
@@ -151,7 +156,13 @@ function ProductsPage(props: SessionProps) {
                 <TableBody>
                   {products?.map((product: Product, i: number) => {
                     return (
-                      <TableRow key={i} className="hover:bg-[#f1f7f2]">
+                      <TableRow
+                        key={i}
+                        className="cursor-pointer hover:bg-[#f1f7f2]"
+                        onClick={() =>
+                          router.push(`/dashboard/products/${product.id}`)
+                        }
+                      >
                         <TableCell>{product.name}</TableCell>
                         <TableCell>
                           <span className="rounded-full bg-[#005930]/20 p-2 font-semibold text-[#005930]">
@@ -174,7 +185,12 @@ function ProductsPage(props: SessionProps) {
                 </TableBody>
               </Table>
             ) : (
-              <ProductRowMobile products={products} />
+              <ProductRowMobile
+                products={products}
+                onProductClick={(productId) =>
+                  router.push(`/dashboard/products/${productId}`)
+                }
+              />
             )}
           </>
         )}

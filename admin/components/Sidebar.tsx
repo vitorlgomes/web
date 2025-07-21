@@ -1,28 +1,28 @@
-'use client'
+"use client";
 
-import { LogOut } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React from 'react'
-import { useMediaQuery } from 'react-responsive'
+import { LogOut } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { useMediaQuery } from "react-responsive";
 
-import supabaseClient from '@/app/hooks/supabaseClient'
-import LirioLogo from '@/assets/lirio-vector-logo.svg'
-import { Button } from '@/components/ui/button'
-import { Context } from '@/lib/context'
+import supabaseClient from "@/app/hooks/supabaseClient";
+import LirioLogo from "@/assets/lirio-vector-logo.svg";
+import { Button } from "@/components/ui/button";
+import { Context } from "@/lib/context";
 
-import * as DashboardLayout from '../assets/dashboard-line.svg'
-import * as Sales from '../assets/money-dollar-circle-line.svg'
-import * as ShoppingBasket from '../assets/shopping-bag-black.svg'
-import * as Categories from '../assets/stack-fill.svg'
+import * as DashboardLayout from "../assets/dashboard-line.svg";
+import * as Sales from "../assets/money-dollar-circle-line.svg";
+import * as ShoppingBasket from "../assets/shopping-bag-black.svg";
+import * as Categories from "../assets/stack-fill.svg";
 
 export function Sidebar() {
-  const router = useRouter()
+  const router = useRouter();
   const isMobile = useMediaQuery({
-    query: '(max-width: 768px)',
-  })
-  const { isOpen } = React.useContext(Context)
+    query: "(max-width: 768px)",
+  });
+  const { isOpen } = React.useContext(Context);
 
   return (
     <>
@@ -30,7 +30,7 @@ export function Sidebar() {
         <></>
       ) : (
         <aside
-          className={`z-10 flex h-screen w-60 flex-col justify-between bg-[##FCFBF7] p-4 font-nohemi font-normal ${isMobile && isOpen ? 'absolute bg-white' : ''}`}
+          className={`z-10 flex h-screen w-60 flex-col justify-between bg-[##FCFBF7] p-4 font-nohemi font-normal ${isMobile && isOpen ? "absolute bg-white" : ""}`}
         >
           <div>
             <Image src={LirioLogo} alt="Lirio Logo" width={78} height={24} />
@@ -101,9 +101,9 @@ export function Sidebar() {
               size="sm"
               className="flex w-full items-center justify-start space-x-2"
               onClick={async () => {
-                const response = await supabaseClient?.auth.signOut()
+                const response = await supabaseClient?.auth.signOut();
 
-                if (!response?.error) router.push('/auth')
+                if (!response?.error) router.push("/");
               }}
             >
               <LogOut className="h-5 w-5" />
@@ -113,5 +113,5 @@ export function Sidebar() {
         </aside>
       )}
     </>
-  )
+  );
 }

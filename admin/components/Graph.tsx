@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Area,
   AreaChart,
@@ -7,39 +7,38 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from "recharts";
 
 type Props = {
-  data: { date: string; revenue: number }[]
-  title: string
-  subtitle: string
-}
+  data: { date: string; revenue: number }[];
+  title: string;
+};
 
 // Custom Tooltip Component
 const CustomTooltip = ({
   active,
   payload,
 }: {
-  active?: boolean
-  payload?: { value: number }[]
+  active?: boolean;
+  payload?: { value: number }[];
 }) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg bg-white px-4 py-2 text-center shadow-md">
         <span className="font-nohemi text-sm font-medium text-[#0B0C0B]">
-          R$ {payload[0].value.toLocaleString('pt-BR')}
+          R$ {payload[0].value.toLocaleString("pt-BR")}
         </span>
       </div>
-    )
+    );
   }
-  return null
-}
+  return null;
+};
 
-export default function CustomGraph({ data, title, subtitle }: Props) {
+export default function CustomGraph({ data, title }: Props) {
   const finalDala = data.map((item) => ({
     date: item.date,
     value: item.revenue,
-  }))
+  }));
 
   return (
     <div className="rounded-lg bg-[#FAF9F6] p-6">
@@ -48,7 +47,6 @@ export default function CustomGraph({ data, title, subtitle }: Props) {
         <span className="font-nohemi text-base font-medium text-[#005930]">
           {title}
         </span>
-        <p className="font-inter text-sm text-[#6D736D]">{subtitle}</p>
       </div>
 
       {/* Chart */}
@@ -66,18 +64,18 @@ export default function CustomGraph({ data, title, subtitle }: Props) {
           <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 12, fill: '#005930' }}
+            tick={{ fontSize: 12, fill: "#005930" }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fontSize: 12, fill: '#005930' }}
+            tick={{ fontSize: 12, fill: "#005930" }}
             axisLine={false}
             tickLine={false}
           />
           <Tooltip
             content={<CustomTooltip />}
-            cursor={{ stroke: '#10B981', strokeWidth: 2, opacity: 0.2 }}
+            cursor={{ stroke: "#10B981", strokeWidth: 2, opacity: 0.2 }}
           />
           <Area
             type="monotone"
@@ -88,13 +86,13 @@ export default function CustomGraph({ data, title, subtitle }: Props) {
             fill="url(#colorValue)"
             activeDot={{
               r: 6,
-              fill: '#10B981',
-              stroke: '#FFFFFF',
+              fill: "#10B981",
+              stroke: "#FFFFFF",
               strokeWidth: 2,
             }}
           />
         </AreaChart>
       </ResponsiveContainer>
     </div>
-  )
+  );
 }

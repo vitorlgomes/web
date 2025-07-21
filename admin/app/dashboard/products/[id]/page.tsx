@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Loader2, TrashIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import {
   Controller,
   SubmitHandler,
@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import Title from "@/components/ui/title";
 
@@ -44,16 +45,20 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-const createProductForm = z.object({
+const updateProductForm = z.object({
   image: z
     .any()
-    .refine((files) => files?.length === 1, "A imagem é obrigatória.")
+    .optional()
     .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      (files) =>
+        !files || files?.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE,
       `O tamanho máximo para imagens é de 1MB.`,
     )
     .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      (files) =>
+        !files ||
+        files?.length === 0 ||
+        ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
       ".jpg, .jpeg, .png and .webp files are accepted.",
     ),
   name: z.string().min(4),
@@ -74,7 +79,7 @@ const createProductForm = z.object({
     .nullish(),
 });
 
-export type CreateProductForm = z.infer<typeof createProductForm>;
+export type UpdateProductForm = z.infer<typeof updateProductForm>;
 
 const AddButton: React.FC<{
   onClick: () => void;
@@ -100,14 +105,19 @@ const RemoveButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-function CreateProductPage(props: SessionProps) {
+function UpdateProductPage(props: SessionProps) {
+  const params = useParams();
+  const productId = params.id as string;
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateProductForm>({
-    resolver: zodResolver(createProductForm),
+  } = useForm<UpdateProductForm>({
+    resolver: zodResolver(updateProductForm),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
@@ -117,8 +127,15 @@ function CreateProductPage(props: SessionProps) {
     name: "variants",
   });
 
-  const router = useRouter();
+  // Fetch existing product data
+  const { data: product, isLoading: loadingProduct } = useSWR(
+    productId && props.shopId
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${productId}?shopId=${props.shopId}`
+      : null,
+    fetcher,
+  );
 
+  // Fetch categories
   const { data: categories } = useSWR(
     props.shopId
       ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories?shopId=${props.shopId}`
@@ -126,49 +143,124 @@ function CreateProductPage(props: SessionProps) {
     fetcher,
   );
 
-  const onSubmit: SubmitHandler<CreateProductForm> = async (data) => {
+  // Populate form with existing product data
+  useEffect(() => {
+    if (product) {
+      reset({
+        name: product.name,
+        outOfStock: product.outOfStock,
+        description: product.description,
+        categoryId: product.categoryId,
+        discount: product.discount || 0,
+        price: product.price,
+        variants: product.variants || [],
+      });
+    }
+  }, [product, reset]);
+
+  const onSubmit: SubmitHandler<UpdateProductForm> = async (data) => {
     const { variants, image, ...validData } = data;
 
     const formData = new FormData();
 
+    // Properly append each field to FormData
     for (const key in validData) {
-      if (key && validData) {
-        // @ts-ignore
-        formData.append(key, validData[key]);
+      const value = (validData as any)[key];
+      if (
+        Object.prototype.hasOwnProperty.call(validData, key) &&
+        value !== undefined &&
+        value !== null
+      ) {
+        formData.append(key, String(value));
       }
     }
 
+    // Remove discount
     formData.delete("discount");
 
-    variants &&
-      variants.length > 0 &&
+    // Add variants if they exist
+    if (variants && variants.length > 0) {
       formData.append("variants", JSON.stringify(variants));
-    props.shopId && formData.append("shopId", `${props.shopId}`);
-    formData.append("image", image[0]);
+    }
 
-    await axios
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .catch((error) => {
-        toast.error(
-          `Erro ao salvar o produto, tente novamente ou entre em contato.`,
-        );
-        throw error;
-      });
+    // Add shopId
+    if (props.shopId) {
+      formData.append("shopId", String(props.shopId));
+    }
 
-    toast.success(`Produto criado com sucesso!`);
+    // Only append image if a new one was selected
+    if (image && image.length > 0) {
+      formData.append("image", image[0]);
+    }
+
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${productId}`,
+        formData,
+      );
+    } catch (error: any) {
+      toast.error(
+        `Erro ao atualizar o produto: ${error.response?.data?.message || error.message}`,
+      );
+      return;
+    }
+
+    toast.success(`Produto atualizado com sucesso!`);
     return router.push("/dashboard/products");
   };
 
+  if (loadingProduct) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <Skeleton className="h-32 w-full" />
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <div className="flex gap-4">
+            <Skeleton className="h-10 flex-1" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+          <div className="flex gap-4">
+            <Skeleton className="h-10 flex-1" />
+            <Skeleton className="h-10 flex-1" />
+          </div>
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <h2 className="text-xl font-semibold text-gray-900">
+          Produto não encontrado
+        </h2>
+        <p className="mt-2 text-sm text-gray-600">
+          O produto que você está tentando editar não foi encontrado.
+        </p>
+        <Button
+          className="mt-4"
+          onClick={() => router.push("/dashboard/products")}
+        >
+          Voltar para produtos
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
-      <Title label="Adicionar produto" />
+      <Title label="Editar produto" />
       <p className="w-full text-sm font-normal text-[#6d726d] sm:w-[515px]">
-        Crie um novo produto preenchendo as informações abaixo. Apenas produtos
-        em estoque estarão disponíveis na loja. Certifique-se que a imagem
-        possui um formato landscape. Ao inserir a imagem, você conseguirá
-        confirmar a pré-visualização.
+        Edite as informações do produto abaixo. Apenas produtos em estoque
+        estarão disponíveis na loja. Certifique-se que a imagem possui um
+        formato landscape. Ao inserir uma nova imagem, você conseguirá confirmar
+        a pré-visualização.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -176,6 +268,7 @@ function CreateProductPage(props: SessionProps) {
           errors={errors.image}
           onFileSelect={() => console.log("Arquivo salvo.")}
           formAttrs={register("image")}
+          existingImageUrl={product.image}
         />
 
         <div className="flex flex-col gap-4 sm:gap-8 lg:flex-row">
@@ -221,7 +314,10 @@ function CreateProductPage(props: SessionProps) {
                     <label className="text-xs font-medium text-[#0b0c0b]">
                       Categoria
                     </label>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      value={field.value?.toString()}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger className="w-full text-[#6d726d]">
                         <SelectValue
                           className="text-[#6d726d]"
@@ -299,7 +395,7 @@ function CreateProductPage(props: SessionProps) {
             </div>
             {fields.map((field, index) => (
               <div
-                key={index}
+                key={field.id}
                 className="mt-6 flex flex-col items-start gap-4 lg:flex-row lg:items-center"
               >
                 <div className="mt-8">
@@ -318,8 +414,11 @@ function CreateProductPage(props: SessionProps) {
                       name={`variants.${index}.group`}
                       control={control}
                       key={field.id}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange}>
+                      render={({ field: selectField }) => (
+                        <Select
+                          value={selectField.value}
+                          onValueChange={selectField.onChange}
+                        >
                           <SelectTrigger className="w-full text-[#6d726d]">
                             <SelectValue
                               className="text-[#6d726d]"
@@ -397,4 +496,4 @@ function CreateProductPage(props: SessionProps) {
   );
 }
 
-export default withAuth(CreateProductPage);
+export default withAuth(UpdateProductPage);

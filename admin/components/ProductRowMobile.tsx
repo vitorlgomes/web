@@ -1,22 +1,31 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React from "react";
 
-import { Product } from '@/types/product'
+import { Product } from "@/types/product";
 
 type Props = {
-  products: Product[]
-  currencySymbol?: string // Símbolo da moeda (padrão R$)
-}
+  products: Product[];
+  currencySymbol?: string; // Símbolo da moeda (padrão R$)
+  onProductClick?: (productId: number) => void;
+};
 
-const ProductRowMobile = ({ products, currencySymbol = 'R$' }: Props) => {
+const ProductRowMobile = ({
+  products,
+  currencySymbol = "R$",
+  onProductClick,
+}: Props) => {
   return (
     <>
       {products?.map((item, index) => {
-        const price = item.price.toFixed(2)
+        const price = item.price.toFixed(2);
 
         return (
-          <div key={index} className="rounded-lg border bg-white p-4 shadow-lg">
+          <div
+            key={index}
+            className="cursor-pointer rounded-lg border bg-white p-4 shadow-lg transition-colors hover:bg-[#f1f7f2]"
+            onClick={() => onProductClick?.(item.id)}
+          >
             <div className="mb-4 flex justify-between">
               <span className="font-medium text-gray-700">{item.name}</span>
             </div>
@@ -26,7 +35,7 @@ const ProductRowMobile = ({ products, currencySymbol = 'R$' }: Props) => {
                   <span className="text-gray-500">({item.category.name})</span>
                 </span>
                 <span>
-                  {currencySymbol} {price.replace('.', ',')}
+                  {currencySymbol} {price.replace(".", ",")}
                 </span>
               </div>
             </div>
@@ -38,10 +47,10 @@ const ProductRowMobile = ({ products, currencySymbol = 'R$' }: Props) => {
               </div>
             )}
           </div>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
-export default ProductRowMobile
+export default ProductRowMobile;
