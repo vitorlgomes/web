@@ -80,7 +80,7 @@ const MagicLinkAuthContent: React.FC = () => {
         email,
         options: {
           shouldCreateUser: false,
-          emailRedirectTo: `http://localhost:3000/dashboard`, // Redirect URL after successful login (optional)
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_HOST}/dashboard`, // Redirect URL after successful login (optional)
         },
       });
 
