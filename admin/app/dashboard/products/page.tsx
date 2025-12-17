@@ -24,7 +24,7 @@ import {
 import { Product } from "@/types/product";
 
 import { fetcher } from "../../hooks/fetcher";
-import { SessionProps } from "../orders/page";
+import { SessionProps } from "../layout";
 
 function ProductsPage(props: SessionProps) {
   const router = useRouter();
@@ -40,7 +40,7 @@ function ProductsPage(props: SessionProps) {
 
   const perPage = 10;
 
-  let productsURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?shopId=1&page=${pageIndex}&limit=${perPage}`;
+  let productsURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?shopId=${props.shopId}&page=${pageIndex}&limit=${perPage}`;
 
   if (categorySelected) productsURL += `&categoryId=${categorySelected}`;
 
@@ -149,7 +149,7 @@ function ProductsPage(props: SessionProps) {
                     <TableHead>Nome</TableHead>
                     <TableHead>Tag</TableHead>
                     <TableHead>Categoria</TableHead>
-                    <TableHead>Em Estoque</TableHead>
+                    <TableHead>Fora de estoque</TableHead>
                     <TableHead>Valor</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -171,7 +171,7 @@ function ProductsPage(props: SessionProps) {
                         </TableCell>
                         <TableCell>{product.category.name}</TableCell>
                         <TableCell>
-                          {product.outOfStock ? "Não" : "Sim"}
+                          {product.outOfStock ? "Sim" : "Não"}
                         </TableCell>
                         <TableCell>
                           {product.price.toLocaleString("pt-BR", {

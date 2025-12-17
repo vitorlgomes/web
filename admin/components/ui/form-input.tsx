@@ -44,7 +44,7 @@ const FormInput = React.forwardRef<HTMLInputElement, Props>((props) => {
       )}
 
       {props.errors && (
-        <span className="block text-xs text-red-500">
+        <span className="block text-xs text-red-500 mt-3">
           {props.errors.message}
         </span>
       )}

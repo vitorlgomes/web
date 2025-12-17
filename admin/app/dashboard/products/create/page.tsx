@@ -34,7 +34,7 @@ import { Switch } from "@/components/ui/switch";
 import Title from "@/components/ui/title";
 
 import * as PlusIcon from "../../../../assets/plus-icon.svg";
-import { SessionProps } from "../../orders/page";
+import { SessionProps } from "../../layout";
 
 const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -138,7 +138,7 @@ function CreateProductPage(props: SessionProps) {
       }
     }
 
-    formData.delete("discount");
+    // formData.delete("discount");
 
     variants &&
       variants.length > 0 &&
@@ -193,7 +193,7 @@ function CreateProductPage(props: SessionProps) {
                 control={control}
                 render={({ field }) => (
                   <div className="block text-xs font-medium text-[#0b0c0b]">
-                    <label className="block">Em estoque?</label>
+                    <label className="block">Fora de estoque?</label>
                     <div className="mt-4">
                       <Switch
                         checked={field.value ?? false}
@@ -366,7 +366,7 @@ function CreateProductPage(props: SessionProps) {
                   key={field.id}
                   render={({ field }) => (
                     <div className="block text-xs font-medium text-[#0b0c0b]">
-                      <label className="block">Em estoque?</label>
+                      <label className="block">Fora de estoque?</label>
                       <div className="mt-4">
                         <Switch
                           checked={field.value}

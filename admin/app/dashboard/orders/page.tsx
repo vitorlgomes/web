@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { SessionProps } from '../layout'
 
 interface Product {
   id: number
@@ -34,9 +35,6 @@ export interface Order {
   products: Product[]
 }
 
-export type SessionProps = {
-  shopId: number
-}
 
 function OrdersPage(props: SessionProps) {
   const [orders, setOrders] = useState<Order[]>([])

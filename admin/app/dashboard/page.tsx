@@ -12,6 +12,7 @@ import { Context } from "@/lib/context";
 
 import { fetcher } from "../hooks/fetcher";
 import withAuth from "../hooks/withAuth";
+import { SessionProps } from "./layout";
 
 export type RevenueData = {
   date: string;
@@ -27,9 +28,9 @@ type Response = {
   top3MostSoldProducts: Array<{ name: string; sales: number }>;
 };
 
-function DashboardPage() {
+function DashboardPage(props: SessionProps) {
   const { data: dashboardSummary, isValidating } = useSWR<Response>(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/dashboard/data`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/dashboard/data?shopId=${props.shopId}`,
     fetcher,
   );
   const isMobile = useMediaQuery({

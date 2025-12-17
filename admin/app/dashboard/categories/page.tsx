@@ -33,8 +33,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { SessionProps } from '../layout'
 
-import { SessionProps } from '../orders/page'
 
 const createCategorySchema = z.object({
   name: z.string().min(1, 'O nome da categoria é obrigatório'),

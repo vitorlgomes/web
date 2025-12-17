@@ -5,6 +5,10 @@ import React from 'react'
 import { Sidebar } from '@/components/Sidebar'
 import { Context } from '@/lib/context'
 
+export type SessionProps = {
+  shopId: number
+}
+
 export default function DashboardLayout({
   children,
 }: {
