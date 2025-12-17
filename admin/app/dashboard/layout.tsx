@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React from "react";
 
-import { Sidebar } from '@/components/Sidebar'
-import { Context } from '@/lib/context'
+import { Sidebar } from "@/components/Sidebar";
+import { Context } from "@/lib/context";
 
 export type SessionProps = {
   shopId: number
@@ -12,9 +12,9 @@ export type SessionProps = {
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <Context.Provider value={{ isOpen, setIsOpen }}>
       <div className="flex h-screen gap-6 bg-[#FCFBF7]">
@@ -24,5 +24,5 @@ export default function DashboardLayout({
         </main>
       </div>
     </Context.Provider>
-  )
+  );
 }
