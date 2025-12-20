@@ -1,17 +1,15 @@
-import * as React from 'react'
-import { UseFormRegister } from 'react-hook-form'
-
-import { CreateProductForm } from '@/app/dashboard/products/create/page'
+import * as React from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 type Props = {
-  errors?: any
-  key?: string
-  label: string
-  type: string
-  placeholder: string
-  style?: React.CSSProperties
-  formAttrs: ReturnType<UseFormRegister<CreateProductForm>>
-}
+  errors?: any;
+  key?: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  style?: React.CSSProperties;
+  formAttrs: UseFormRegisterReturn<string>;
+};
 
 const FormInput = React.forwardRef<HTMLInputElement, Props>((props) => {
   return (
@@ -23,7 +21,7 @@ const FormInput = React.forwardRef<HTMLInputElement, Props>((props) => {
         {props.label}
       </label>
 
-      {props.type === 'textarea' ? (
+      {props.type === "textarea" ? (
         <textarea
           {...props.formAttrs}
           key={props.key}
@@ -36,7 +34,7 @@ const FormInput = React.forwardRef<HTMLInputElement, Props>((props) => {
         <input
           {...props.formAttrs}
           key={props.key}
-          style={{ width: '329px', ...props.style }}
+          style={{ width: "329px", ...props.style }}
           placeholder={props.placeholder}
           type={props.type}
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -44,13 +42,13 @@ const FormInput = React.forwardRef<HTMLInputElement, Props>((props) => {
       )}
 
       {props.errors && (
-        <span className="block text-xs text-red-500 mt-3">
+        <span className="mt-3 block text-xs text-red-500">
           {props.errors.message}
         </span>
       )}
     </div>
-  )
-})
-FormInput.displayName = 'FormInput'
+  );
+});
+FormInput.displayName = "FormInput";
 
-export { FormInput }
+export { FormInput };

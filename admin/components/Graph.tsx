@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 type Props = {
-  data: { date: string; revenue: number }[];
+  data: { date: string; value: number }[];
   title: string;
 };
 
@@ -37,7 +37,7 @@ const CustomTooltip = ({
 export default function CustomGraph({ data, title }: Props) {
   const finalDala = data.map((item) => ({
     date: item.date,
-    value: item.revenue,
+    value: item.value,
   }));
 
   return (

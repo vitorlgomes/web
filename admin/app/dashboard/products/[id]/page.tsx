@@ -153,7 +153,15 @@ function UpdateProductPage(props: SessionProps) {
         categoryId: product.categoryId,
         discount: product.discount || 0,
         price: product.price,
-        variants: product.variants || [],
+        // Map ProductVariation to variants for the form
+        variants: product.ProductVariation
+          ? product.ProductVariation.map((v: any) => ({
+              name: v.name,
+              group: v.group,
+              additionalPrice: v.additionalPrice,
+              outOfStock: v.outOfStock,
+            }))
+          : [],
       });
     }
   }, [product, reset]);

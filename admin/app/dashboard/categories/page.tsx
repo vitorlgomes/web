@@ -32,15 +32,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { SessionProps } from '../layout'
-
 } from "@/components/ui/table";
-
-import { SessionProps } from "../orders/page";
+import { SessionProps } from "../layout";
 
 const createCategorySchema = z.object({
   name: z.string().min(1, "O nome da categoria é obrigatório"),
+  priority: z.preprocess(
+    (val) => (val === "" || val === undefined ? undefined : Number(val)),
+    z.number().int().optional(),
+  ),
 });
 
 type CreateCategoryForm = z.infer<typeof createCategorySchema>;
@@ -48,6 +48,7 @@ type CreateCategoryForm = z.infer<typeof createCategorySchema>;
 interface Category {
   id: number;
   name: string;
+  priority?: number;
   createdAt: string;
   shopId: number;
 }
@@ -133,9 +134,12 @@ function CategoriesPage(props: SessionProps) {
         <h1 className="font-nohemi text-2xl font-medium">Categorias</h1>
         <Dialog
           open={isDialogOpen}
-          onOpenChange={() => {
-            setIsDialogOpen(!isDialogOpen);
-            setCurrentCategory(null);
+          onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) {
+              setCurrentCategory(null);
+              reset({ name: "", priority: undefined });
+            }
           }}
         >
           <DialogTrigger asChild>
@@ -158,6 +162,16 @@ function CategoriesPage(props: SessionProps) {
                   placeholder="Digite o nome da categoria"
                   formAttrs={register("name")}
                   errors={errors.name}
+                />
+              </div>
+              <div className="w-100 mb-4">
+                <FormInput
+                  label="Prioridade (opcional)"
+                  style={{ width: "100%", display: "block", marginTop: "1rem" }}
+                  type="number"
+                  placeholder="Digite a prioridade (número inteiro)"
+                  formAttrs={register("priority")}
+                  errors={errors.priority}
                 />
               </div>
 
@@ -213,8 +227,12 @@ function CategoriesPage(props: SessionProps) {
               categories.map((category) => (
                 <TableRow
                   onClick={() => {
-                    setIsDialogOpen(true);
                     setCurrentCategory(category.id);
+                    reset({
+                      name: category.name,
+                      priority: category.priority,
+                    });
+                    setIsDialogOpen(true);
                   }}
                   key={category.id}
                   className="hover:bg-[#f1f7f2]"

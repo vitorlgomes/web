@@ -16,7 +16,7 @@ import { SessionProps } from "./layout";
 
 export type RevenueData = {
   date: string;
-  revenue: number;
+  value: number;
   isToday: boolean;
 };
 
@@ -73,8 +73,10 @@ function DashboardPage(props: SessionProps) {
           title="Receita no dia"
           icon="institutional"
           value={
-            dashboardSummary?.revenueByDay?.find((item) => item.isToday)
-              ?.revenue || 0
+            dashboardSummary?.revenueByDay?.reduce(
+              (acc, item) => acc + item.value,
+              0,
+            ) || 0
           }
           type="currency"
         />

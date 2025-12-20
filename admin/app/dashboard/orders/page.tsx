@@ -17,9 +17,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { SessionProps } from '../layout'
 } from "@/components/ui/table";
+import { SessionProps } from "../layout";
 
 interface Product {
   id: number;
@@ -35,10 +34,6 @@ export interface Order {
   userName: string;
   products: Product[];
 }
-
-export type SessionProps = {
-  shopId: number;
-};
 
 function OrdersPage(props: SessionProps) {
   const [orders, setOrders] = useState<Order[]>([]);
