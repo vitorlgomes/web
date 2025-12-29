@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Product } from "@/types/product";
+import { getTranslatedText, Product } from "@/types/product";
 
 type Props = {
   products: Product[];
@@ -27,12 +27,16 @@ const ProductRowMobile = ({
             onClick={() => onProductClick?.(item.id)}
           >
             <div className="mb-4 flex justify-between">
-              <span className="font-medium text-gray-700">{item.name}</span>
+              <span className="font-medium text-gray-700">
+                {getTranslatedText(item.name)}
+              </span>
             </div>
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-700">
                 <span>
-                  <span className="text-gray-500">({item.category.name})</span>
+                  <span className="text-gray-500">
+                    ({getTranslatedText(item.category.name)})
+                  </span>
                 </span>
                 <span>
                   {currencySymbol} {price.replace(".", ",")}

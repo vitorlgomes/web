@@ -1,15 +1,16 @@
-import { TrendingUp } from 'lucide-react'
+import { TrendingUp } from "lucide-react";
 
-import { CardTitle } from '@/components/ui/card'
+import { CardTitle } from "@/components/ui/card";
+import { getTranslatedText } from "@/types/product";
 
 type Product = {
-  name: string
-  sales: number
-}
+  name: string;
+  sales: number;
+};
 
 type Props = {
-  products: Product[]
-}
+  products: Product[];
+};
 
 export function TopProductsCard({ products }: Props) {
   return (
@@ -28,7 +29,7 @@ export function TopProductsCard({ products }: Props) {
                 <TrendingUp size={20} />
               </div>
               <span className="text-base font-medium text-gray-700">
-                {product.name}
+                {getTranslatedText(product.name)}
               </span>
             </div>
             <span className="text-sm font-semibold text-gray-600">
@@ -38,5 +39,5 @@ export function TopProductsCard({ products }: Props) {
         ))}
       </ul>
     </div>
-  )
+  );
 }

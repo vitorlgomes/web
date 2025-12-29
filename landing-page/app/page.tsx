@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./styles.module.css";
 import React from "react";
+import ModelSection from "./components/ModelSection";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = React.useState(false);

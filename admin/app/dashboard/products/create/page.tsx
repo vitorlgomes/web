@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import Title from "@/components/ui/title";
+import { getTranslatedText } from "@/types/product";
 
 import * as PlusIcon from "../../../../assets/plus-icon.svg";
 import { SessionProps } from "../../layout";
@@ -236,7 +237,7 @@ function CreateProductPage(props: SessionProps) {
                               key={category.id}
                               value={category.id.toString()}
                             >
-                              {category.name}
+                              {getTranslatedText(category.name)}
                             </SelectItem>
                           ))}
                         </SelectGroup>

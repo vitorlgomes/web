@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Product } from "@/types/product";
+import { getTranslatedText, Product } from "@/types/product";
 
 import { fetcher } from "../../hooks/fetcher";
 import { SessionProps } from "../layout";
@@ -112,7 +112,7 @@ function ProductsPage(props: SessionProps) {
                   variant="ghost"
                   className={`whitespace-nowrap rounded-full ${categorySelected === category.id ? "bg-[#005930]/20 p-2 font-semibold text-[#005930]" : ""}`}
                 >
-                  {category.name}
+                  {getTranslatedText(category.name)}
                 </Button>
               );
             })}
@@ -163,13 +163,15 @@ function ProductsPage(props: SessionProps) {
                           router.push(`/dashboard/products/${product.id}`)
                         }
                       >
-                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{getTranslatedText(product.name)}</TableCell>
                         <TableCell>
                           <span className="rounded-full bg-[#005930]/20 p-2 font-semibold text-[#005930]">
                             Mais vendido
                           </span>
                         </TableCell>
-                        <TableCell>{product.category.name}</TableCell>
+                        <TableCell>
+                          {getTranslatedText(product.category.name)}
+                        </TableCell>
                         <TableCell>
                           {product.outOfStock ? "Sim" : "Não"}
                         </TableCell>

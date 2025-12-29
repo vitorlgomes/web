@@ -1,18 +1,44 @@
+// i18n Types
+export type SupportedLanguage = 'pt' | 'en' | 'es';
+
+export interface TranslatedField {
+  pt: string;
+  en: string;
+  es: string;
+}
+
 export type Product = {
   id: number;
-  name: string;
-  category: { name: string; id: number };
+  name: TranslatedField;
+  category: { name: TranslatedField; id: number };
   outOfStock: boolean;
   price: number;
   quantity: number;
   imageUrl: string;
-  description: string;
+  description: TranslatedField;
   categoryId: number;
   discount?: number;
   variants?: Array<{
-    name: string;
+    name: TranslatedField;
     group: string;
     additionalPrice: number;
     outOfStock: boolean;
   }>;
 };
+
+export type Category = {
+  id: number;
+  name: TranslatedField;
+  priority?: number;
+  shopId?: number;
+};
+
+// Helper function to get text in a specific language
+export function getTranslatedText(
+  field: TranslatedField | string | undefined,
+  language: SupportedLanguage = 'pt'
+): string {
+  if (!field) return '';
+  if (typeof field === 'string') return field;
+  return field[language] || field.pt || '';
+}

@@ -33,6 +33,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import Title from "@/components/ui/title";
+import { getTranslatedText } from "@/types/product";
 
 import * as PlusIcon from "../../../../assets/plus-icon.svg";
 import { SessionProps } from "../../layout";
@@ -147,9 +148,9 @@ function UpdateProductPage(props: SessionProps) {
   useEffect(() => {
     if (product) {
       reset({
-        name: product.name,
+        name: getTranslatedText(product.name),
         outOfStock: product.outOfStock,
-        description: product.description,
+        description: getTranslatedText(product.description),
         categoryId: product.categoryId,
         discount: product.discount || 0,
         price: product.price,
@@ -340,7 +341,7 @@ function UpdateProductPage(props: SessionProps) {
                               key={category.id}
                               value={category.id.toString()}
                             >
-                              {category.name}
+                              {getTranslatedText(category.name)}
                             </SelectItem>
                           ))}
                         </SelectGroup>

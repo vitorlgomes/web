@@ -33,6 +33,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getTranslatedText } from "@/types/product";
+
 import { SessionProps } from "../layout";
 
 const createCategorySchema = z.object({
@@ -229,7 +231,7 @@ function CategoriesPage(props: SessionProps) {
                   onClick={() => {
                     setCurrentCategory(category.id);
                     reset({
-                      name: category.name,
+                      name: getTranslatedText(category.name),
                       priority: category.priority,
                     });
                     setIsDialogOpen(true);
@@ -238,7 +240,7 @@ function CategoriesPage(props: SessionProps) {
                   className="hover:bg-[#f1f7f2]"
                 >
                   <TableCell>{category.id}</TableCell>
-                  <TableCell>{category.name}</TableCell>
+                  <TableCell>{getTranslatedText(category.name)}</TableCell>
                   <TableCell>
                     {new Date(category.createdAt).toLocaleDateString()}
                   </TableCell>
