@@ -18,13 +18,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TranslatedField } from "@/types/product";
 
 import { SessionProps } from "../layout";
 
+interface ProductVariation {
+  id: number;
+  name: TranslatedField;
+  additionalPrice?: number;
+  quantity?: number;
+  group?: string;
+}
+
 interface Product {
   id: number;
-  name: string;
+  name: TranslatedField;
   quantity: number;
+  productVariations?: ProductVariation[];
 }
 
 export interface Order {
@@ -33,6 +43,7 @@ export interface Order {
   createdAt: string;
   status: string;
   userName: string;
+  user_phone?: string;
   products: Product[];
 }
 
@@ -43,6 +54,7 @@ function OrdersPage(props: SessionProps) {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const [debouncedValue, setDebouncedValue] = React.useState("");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const perPage = 10;
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
@@ -55,6 +67,11 @@ function OrdersPage(props: SessionProps) {
   }, 500);
 
   if (debouncedValue) ordersURL += `&search=${debouncedValue}`;
+
+  const handleOrderUpdated = () => {
+    toast.success("Pedido atualizado com sucesso");
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -76,7 +93,7 @@ function OrdersPage(props: SessionProps) {
     };
 
     props.shopId && fetchOrders();
-  }, [pageIndex, debouncedValue, props.shopId]);
+  }, [pageIndex, debouncedValue, props.shopId, refreshTrigger]);
 
   return (
     <>
@@ -101,7 +118,7 @@ function OrdersPage(props: SessionProps) {
                 <TableHead>Realizado</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Total do pedido</TableHead>
-                <TableHead>Nome do cliente</TableHead>
+                <TableHead>Telefone</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -110,13 +127,17 @@ function OrdersPage(props: SessionProps) {
                     <OrderTableRow key={i} isLoading />
                   ))
                 : orders.map((order) => (
-                    <OrderTableRow key={order.id} order={order} />
+                    <OrderTableRow
+                      key={order.id}
+                      order={order}
+                      onOrderUpdated={handleOrderUpdated}
+                    />
                   ))}
             </TableBody>
           </Table>
         </div>
       ) : (
-        <Receipt orders={orders} />
+        <Receipt orders={orders} onOrderUpdated={handleOrderUpdated} />
       )}
       <Pagination
         pageIndex={pageIndex}

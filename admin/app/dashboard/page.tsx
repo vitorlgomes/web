@@ -24,7 +24,7 @@ type Response = {
   revenueByDay: RevenueData[];
   totalOrdersByToday: number;
   totalOrdersPending: number;
-  avarageTimeForOrdersFromTheWeek: number;
+  averageTimeForOrdersFromTheWeek: number;
   top3MostSoldProducts: Array<{ name: string; sales: number }>;
 };
 
@@ -73,10 +73,12 @@ function DashboardPage(props: SessionProps) {
           title="Receita no dia"
           icon="institutional"
           value={
-            dashboardSummary?.revenueByDay?.reduce(
-              (acc, item) => acc + item.value,
-              0,
-            ) || 0
+            dashboardSummary?.revenueByDay
+              ?.filter((item) => item.isToday)
+              .reduce(
+                (acc, item) => acc + item.value,
+                0,
+              ) || 0
           }
           type="currency"
         />
@@ -90,10 +92,10 @@ function DashboardPage(props: SessionProps) {
           icon="time"
           title="Tempo médio de pedidos em minutos"
           value={
-            dashboardSummary?.avarageTimeForOrdersFromTheWeek || "Não definido"
+            dashboardSummary?.averageTimeForOrdersFromTheWeek || "Não definido"
           }
           type={
-            dashboardSummary?.avarageTimeForOrdersFromTheWeek ? "int" : "text"
+            dashboardSummary?.averageTimeForOrdersFromTheWeek ? "int" : "text"
           }
         />
       </div>

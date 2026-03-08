@@ -22,10 +22,10 @@ export function TopProductsCard({ products }: Props) {
         {products.slice(0, 3).map((product, index) => (
           <li
             key={index}
-            className="flex items-center justify-between border-b pb-4 last:border-none"
+            className="flex items-start justify-between border-b pb-4 last:border-none"
           >
-            <div className="flex items-center space-x-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#005930] bg-gradient-to-r text-white">
+            <div className="flex items-start space-x-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#005930] bg-gradient-to-r text-white">
                 <TrendingUp size={20} />
               </div>
               <span className="text-base font-medium text-gray-700">

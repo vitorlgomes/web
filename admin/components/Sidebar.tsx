@@ -65,7 +65,7 @@ export function Sidebar() {
                 <span className="h-4 font-normal">Pedidos</span>
               </Button>
             </Link>
-            <Link className="mt-2" href="/dashboard/products">
+<Link className="mt-2" href="/dashboard/products">
               <Button
                 variant="ghost"
                 size="sm"
