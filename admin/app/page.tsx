@@ -95,6 +95,8 @@ const MagicLinkAuthContent: React.FC = () => {
         },
       });
 
+      console.log("res", res);
+
       if (res?.error) throw res.error;
 
       setMessage({
@@ -103,7 +105,7 @@ const MagicLinkAuthContent: React.FC = () => {
       });
     } catch (error: any) {
       setMessage({
-        text: "Houve um erro inesperado. Tente novamente ou entre em contato. Código: #A45F",
+        text: `Houve um erro inesperado. Tente novamente ou entre em contato. Código: #A45F > ${error}`,
         type: "error",
       });
     } finally {

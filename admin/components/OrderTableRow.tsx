@@ -37,11 +37,19 @@ export function OrderTableRow({
           <div className="h-4 w-20 rounded bg-gray-200" />
         </TableCell>
         <TableCell>
+          <div className="h-4 w-16 rounded bg-gray-200" />
+        </TableCell>
+        <TableCell>
           <div className="h-4 w-24 rounded bg-gray-200" />
         </TableCell>
       </TableRow>
     );
   }
+
+  const typeLabel =
+    order?.delivery_type === "dine_in" && order?.table
+      ? `Mesa ${order.table}`
+      : "Retirada";
 
   return (
     <TableRow>
@@ -76,6 +84,17 @@ export function OrderTableRow({
             {getStatusLabel(order?.status || "")}
           </span>
         </div>
+      </TableCell>
+      <TableCell>
+        <span
+          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+            order?.delivery_type === "dine_in" && order?.table
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-amber-50 text-amber-700"
+          }`}
+        >
+          {typeLabel}
+        </span>
       </TableCell>
       <TableCell className="font-medium">
         R$ {order?.totalValue.toFixed(2).replace(".", ",")}

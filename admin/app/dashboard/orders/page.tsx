@@ -44,6 +44,8 @@ export interface Order {
   status: string;
   userName: string;
   user_phone?: string;
+  table?: number | null;
+  delivery_type?: "dine_in" | "takeaway";
   products: Product[];
 }
 
@@ -117,6 +119,7 @@ function OrdersPage(props: SessionProps) {
                 <TableHead>ID da Ordem</TableHead>
                 <TableHead>Realizado</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Tipo</TableHead>
                 <TableHead>Total do pedido</TableHead>
                 <TableHead>Telefone</TableHead>
               </TableRow>

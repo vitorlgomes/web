@@ -26,6 +26,38 @@ import { getTranslatedText, Product } from "@/types/product";
 import { fetcher } from "../../hooks/fetcher";
 import { SessionProps } from "../layout";
 
+const TAG_LABELS: Record<string, string> = {
+  news: "Novidade",
+  bestseller: "Mais vendido",
+  seasonal: "Sazonal",
+  spicy: "Picante",
+  vegan: "Vegano",
+  vegetarian: "Vegetariano",
+  glutenfree: "Sem glúten",
+  lactosefree: "Sem lactose",
+  organic: "Orgânico",
+  promo: "Promoção",
+};
+
+const TAG_PALETTE = [
+  { bg: "bg-emerald-100", text: "text-emerald-700" },
+  { bg: "bg-amber-100", text: "text-amber-700" },
+  { bg: "bg-sky-100", text: "text-sky-700" },
+  { bg: "bg-violet-100", text: "text-violet-700" },
+  { bg: "bg-rose-100", text: "text-rose-700" },
+  { bg: "bg-teal-100", text: "text-teal-700" },
+  { bg: "bg-indigo-100", text: "text-indigo-700" },
+  { bg: "bg-orange-100", text: "text-orange-700" },
+];
+
+const getTagColor = (tag: string) => {
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = (hash * 31 + tag.charCodeAt(i)) >>> 0;
+  }
+  return TAG_PALETTE[hash % TAG_PALETTE.length];
+};
+
 function ProductsPage(props: SessionProps) {
   const router = useRouter();
   const isMobile = useMediaQuery({
@@ -165,9 +197,23 @@ function ProductsPage(props: SessionProps) {
                       >
                         <TableCell>{getTranslatedText(product.name)}</TableCell>
                         <TableCell>
-                          <span className="rounded-full bg-[#005930]/20 p-2 font-semibold text-[#005930]">
-                            Mais vendido
-                          </span>
+                          {product.tags && product.tags.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {product.tags.map((tag) => {
+                                const { bg, text } = getTagColor(tag);
+                                return (
+                                  <span
+                                    key={tag}
+                                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${bg} ${text}`}
+                                  >
+                                    {TAG_LABELS[tag] ?? tag}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-400">—</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           {getTranslatedText(product.category.name)}

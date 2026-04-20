@@ -21,6 +21,8 @@ export interface TableOrder {
   totalValue: number;
   createdAt: string;
   status: string;
+  paymentStatus: "UNPAID" | "PAID" | "REFUNDED";
+  tabId: number | null;
   userName: string | null;
   userPhone: string | null;
   type: "qr_code" | "backoffice";
@@ -29,6 +31,12 @@ export interface TableOrder {
     name: string;
     quantity: number;
     comments: string | null;
+    productVariations: {
+      id: number;
+      name: string;
+      additionalPrice: number;
+      group: string;
+    }[];
   }[];
 }
 
@@ -38,10 +46,12 @@ export interface TableData {
   orderCount: number;
   lastOrderAt: string;
   oldestPendingOrderAt: string | null;
+  tabId: number | null;
+  tabStatus: "OPEN" | "CLOSED" | null;
   orders: TableOrder[];
 }
 
-export type TableStatus = "recent" | "moderate" | "urgent" | "empty";
+export type TableStatus = "recent" | "moderate" | "urgent" | "occupied" | "empty";
 
 const TABLE_COUNT_OPTIONS = [10, 20, 30] as const;
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
@@ -88,7 +98,6 @@ function MesasPage(props: SessionProps) {
   const handleOrderUpdated = useCallback(() => {
     toast.success("Pedido atualizado com sucesso");
     handleRefresh();
-    setIsModalOpen(false);
   }, [handleRefresh]);
 
   const handleOpenOrderModal = useCallback(() => {
@@ -106,7 +115,6 @@ function MesasPage(props: SessionProps) {
     toast.success("Pedido criado com sucesso");
     handleRefresh();
     setIsOrderModalOpen(false);
-    setIsModalOpen(false);
   }, [handleRefresh]);
 
   useEffect(() => {
@@ -143,16 +151,33 @@ function MesasPage(props: SessionProps) {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (selectedTableNumber == null) return;
+    const fresh = tables.find((t) => t.tableNumber === selectedTableNumber) || null;
+    setSelectedTable(fresh);
+  }, [tables, selectedTableNumber]);
+
   const getTimeStatus = useCallback((table: TableData | null): TableStatus => {
-    if (!table || !table.oldestPendingOrderAt) return "empty";
+    if (!table || table.orderCount === 0) return "empty";
 
     const now = new Date();
-    const oldestPending = new Date(table.oldestPendingOrderAt);
-    const diffMinutes = (now.getTime() - oldestPending.getTime()) / (1000 * 60);
 
-    if (diffMinutes < 10) return "recent";
-    if (diffMinutes < 20) return "moderate";
-    return "urgent";
+    if (table.oldestPendingOrderAt) {
+      const oldestPending = new Date(table.oldestPendingOrderAt);
+      const diffMinutes = (now.getTime() - oldestPending.getTime()) / (1000 * 60);
+
+      if (diffMinutes < 10) return "recent";
+      if (diffMinutes < 20) return "moderate";
+      return "urgent";
+    }
+
+    const hasRecentActiveOrder = table.orders.some((o) => {
+      if (o.status === "CANCELED") return false;
+      return now.getTime() - new Date(o.createdAt).getTime() < TWO_HOURS_MS;
+    });
+    if (hasRecentActiveOrder) return "occupied";
+
+    return "empty";
   }, []);
 
   const tableDataMap = useMemo(() => {
@@ -193,11 +218,13 @@ function MesasPage(props: SessionProps) {
       t.orders.some(o => o.status === "PENDING")
     ).length;
 
-    // Tables occupied in last 2 hours
-    const occupied = tables.filter(t => {
-      const lastOrder = new Date(t.lastOrderAt);
-      return (now.getTime() - lastOrder.getTime()) < TWO_HOURS_MS;
-    }).length;
+    // Tables with non-canceled orders in last 2 hours
+    const occupied = tables.filter(t =>
+      t.orders.some(o => {
+        if (o.status === "CANCELED") return false;
+        return (now.getTime() - new Date(o.createdAt).getTime()) < TWO_HOURS_MS;
+      })
+    ).length;
 
     // Free tables
     const free = tableCount - occupied;
@@ -399,27 +426,43 @@ function MesasPage(props: SessionProps) {
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] text-gray-400">
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span>&lt;10 min</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-amber-500" />
-          <span>10-20 min</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-rose-500" />
-          <span>&gt;20 min</span>
-        </div>
-        <div className="h-3 w-px bg-gray-200" />
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-gray-200" />
-          <span>Livre</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-blue-400" />
-          <span>Ocupada (pedido em 2h)</span>
+      <div className="rounded-xl border border-gray-100 bg-white px-4 py-3 text-[11px]">
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:gap-6">
+          <div className="flex-1">
+            <div className="mb-1.5 text-[9px] font-bold uppercase tracking-wider text-gray-400">
+              Pedido pendente · tempo desde o mais antigo
+            </div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-gray-600">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                <span>Até 10 min</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                <span>10 a 20 min</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                <span>Mais de 20 min</span>
+              </div>
+            </div>
+          </div>
+          <div className="hidden h-full w-px bg-gray-100 sm:block" />
+          <div className="flex-1">
+            <div className="mb-1.5 text-[9px] font-bold uppercase tracking-wider text-gray-400">
+              Sem pedidos pendentes
+            </div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-gray-600">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-400" />
+                <span>Ocupada (teve pedido nas últimas 2h)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full border border-gray-200 bg-white" />
+                <span>Livre</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -429,6 +472,8 @@ function MesasPage(props: SessionProps) {
           <TableDetails
             table={selectedTable}
             tableNumber={selectedTableNumber}
+            tables={tables}
+            totalTables={tableCount}
             onOrderUpdated={handleOrderUpdated}
             onClose={() => setIsModalOpen(false)}
             onNewOrder={handleOpenOrderModal}

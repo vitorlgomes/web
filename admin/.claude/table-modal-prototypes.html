@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Table Modal — Prototypes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { background: #eef2f0; }
+  .card { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.15); }
+</style>
+</head>
+<body class="min-h-screen p-6">
+<div class="mx-auto max-w-[1400px] space-y-10">
+  <header>
+    <h1 class="text-2xl font-bold text-gray-900">Modal de Mesa — 3 propostas</h1>
+    <p class="text-sm text-gray-500">Mesa 5 · 3 pedidos · Conta #42 aberta · R$ 184,50</p>
+  </header>
+
+  <!-- ========================= OPTION 1 ========================= -->
+  <section>
+    <div class="mb-3 flex items-baseline gap-3">
+      <span class="rounded-full bg-blue-600 px-3 py-1 text-xs font-bold uppercase text-white">Opção 1</span>
+      <h2 class="text-lg font-semibold text-gray-900">Sheet em 2 colunas</h2>
+      <span class="text-xs text-gray-500">Conta em destaque à esquerda, pedidos à direita agrupados por status</span>
+    </div>
+    <div class="card overflow-hidden rounded-2xl bg-white">
+      <div class="grid grid-cols-[360px_1fr]">
+        <!-- Left: tab summary -->
+        <aside class="border-r border-gray-100 bg-gradient-to-b from-[#F1F7F2] to-white p-6">
+          <div class="mb-6 flex items-center gap-3">
+            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0B0C0B] text-2xl font-bold text-white shadow-md">5</div>
+            <div>
+              <div class="text-xs uppercase tracking-wider text-gray-400">Mesa</div>
+              <div class="font-semibold text-gray-900">Mesa 5</div>
+            </div>
+          </div>
+
+          <div class="mb-5 rounded-xl border border-blue-200 bg-blue-50/60 p-4">
+            <div class="mb-1 flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700">Conta aberta</span>
+              <span class="rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white">#42</span>
+            </div>
+            <div class="font-mono text-3xl font-bold text-gray-900">R$ 184,50</div>
+            <div class="mt-1 text-[11px] text-gray-500">3 pedidos · aberta há 1h 12min</div>
+          </div>
+
+          <div class="mb-5 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-500">Pendentes</span>
+              <span class="font-semibold text-amber-600">1</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-500">Entregues</span>
+              <span class="font-semibold text-emerald-600">2</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-500">Pagos</span>
+              <span class="font-semibold text-gray-900">R$ 0,00</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-500">A pagar</span>
+              <span class="font-semibold text-rose-600">R$ 184,50</span>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <button disabled class="w-full cursor-not-allowed rounded-lg bg-gray-200 px-3 py-2.5 text-sm font-medium text-gray-400">
+              Fechar Conta (1 pendente)
+            </button>
+            <button class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+              ↔ Mover Conta
+            </button>
+            <button class="w-full rounded-lg bg-[#0B0C0B] px-3 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
+              + Novo Pedido
+            </button>
+          </div>
+        </aside>
+
+        <!-- Right: orders by status -->
+        <div class="flex max-h-[75vh] flex-col">
+          <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+            <div class="flex gap-4 text-sm">
+              <button class="border-b-2 border-[#0B0C0B] pb-1 font-semibold text-gray-900">Pedidos</button>
+              <button class="pb-1 text-gray-400 hover:text-gray-700">Histórico</button>
+            </div>
+            <button class="text-gray-400 hover:text-gray-700">✕</button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto p-6">
+            <!-- Pending group -->
+            <div class="mb-6">
+              <h3 class="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-amber-600">
+                <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                Pendentes · 1
+              </h3>
+              <div class="rounded-xl border border-amber-200 bg-amber-50/40 p-4">
+                <div class="mb-2 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono text-sm font-bold text-amber-700">#3728</span>
+                    <span class="rounded bg-sky-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-sky-700">QR</span>
+                    <span class="rounded bg-rose-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-rose-700">Não pago</span>
+                  </div>
+                  <span class="text-[11px] text-gray-400">14:32</span>
+                </div>
+                <div class="mb-3 space-y-0.5 text-sm">
+                  <div class="flex justify-between"><span class="text-gray-700">×2 X-Burguer</span><span class="text-gray-500">R$ 60,00</span></div>
+                  <div class="flex justify-between"><span class="text-gray-700">×1 Coca 2L</span><span class="text-gray-500">R$ 14,50</span></div>
+                </div>
+                <div class="flex items-center justify-between border-t border-amber-100 pt-3">
+                  <span class="font-semibold text-gray-900">R$ 74,50</span>
+                  <div class="flex gap-2">
+                    <button class="rounded-md bg-emerald-500 px-3 py-1.5 text-xs font-medium text-white">✓ Entregar</button>
+                    <button class="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-xs text-gray-500">⋮</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delivered group -->
+            <div>
+              <h3 class="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-emerald-600">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Entregues · 2
+              </h3>
+              <div class="space-y-2">
+                <div class="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono text-sm font-semibold text-gray-600">#3725</span>
+                      <span class="rounded bg-violet-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-violet-700">Manual</span>
+                      <span class="rounded bg-rose-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-rose-700">Não pago</span>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700">R$ 55,00</span>
+                  </div>
+                  <div class="mt-1 text-xs text-gray-500">×1 Picanha, ×1 Suco</div>
+                </div>
+                <div class="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono text-sm font-semibold text-gray-600">#3724</span>
+                      <span class="rounded bg-sky-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-sky-700">QR</span>
+                      <span class="rounded bg-rose-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-rose-700">Não pago</span>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700">R$ 55,00</span>
+                  </div>
+                  <div class="mt-1 text-xs text-gray-500">×1 Parmegiana</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= OPTION 2 ========================= -->
+  <section>
+    <div class="mb-3 flex items-baseline gap-3">
+      <span class="rounded-full bg-purple-600 px-3 py-1 text-xs font-bold uppercase text-white">Opção 2</span>
+      <h2 class="text-lg font-semibold text-gray-900">Modal com abas internas</h2>
+      <span class="text-xs text-gray-500">Menor mudança, reorganiza o atual em abas</span>
+    </div>
+    <div class="card mx-auto max-w-2xl overflow-hidden rounded-2xl bg-white">
+      <div class="border-b border-[#DAE5DA] bg-[#F1F7F2] px-5 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0B0C0B] text-xl font-bold text-white">5</div>
+            <div>
+              <div class="font-semibold text-gray-900">Mesa 5</div>
+              <div class="mt-0.5 flex items-center gap-1.5 text-xs">
+                <span class="text-gray-600">3 pedidos</span>
+                <span class="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-medium text-blue-700">Conta #42</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] uppercase tracking-wider text-gray-400">Total</div>
+            <div class="text-xl font-bold text-gray-900">R$ 184,50</div>
+          </div>
+        </div>
+        <div class="mt-4 flex gap-1">
+          <button class="rounded-t-lg border-b-2 border-[#0B0C0B] bg-white px-4 py-2 text-sm font-semibold text-gray-900">
+            Pedidos <span class="ml-1 rounded bg-amber-100 px-1.5 text-[10px] text-amber-700">1</span>
+          </button>
+          <button class="rounded-t-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-800">Conta</button>
+          <button class="rounded-t-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-800">Histórico</button>
+        </div>
+      </div>
+
+      <div class="max-h-[50vh] overflow-y-auto p-5">
+        <div class="rounded-xl border border-amber-200 bg-amber-50/40 p-4">
+          <div class="mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-sm font-bold text-amber-700">#3728</span>
+              <span class="rounded bg-sky-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-sky-700">QR</span>
+              <span class="rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-amber-700">Pendente</span>
+            </div>
+            <span class="text-[11px] text-gray-400">14:32</span>
+          </div>
+          <div class="mb-3 space-y-0.5 text-sm">
+            <div class="flex justify-between"><span class="text-gray-700">×2 X-Burguer</span><span class="text-gray-500">R$ 60,00</span></div>
+            <div class="flex justify-between"><span class="text-gray-700">×1 Coca 2L</span><span class="text-gray-500">R$ 14,50</span></div>
+          </div>
+          <div class="flex items-center justify-between border-t border-amber-100 pt-2">
+            <span class="font-semibold text-gray-900">R$ 74,50</span>
+            <div class="flex gap-1.5">
+              <button class="rounded-md bg-emerald-500 px-2.5 py-1 text-[11px] font-medium text-white">✓ Entregar</button>
+              <button class="rounded-md border border-gray-200 bg-white px-2 py-1 text-[11px] text-gray-500">↔</button>
+              <button class="rounded-md border border-gray-200 bg-white px-2 py-1 text-[11px] text-gray-500">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between border-t border-gray-100 bg-white px-5 py-3">
+        <button class="text-sm text-gray-500">Fechar</button>
+        <div class="flex gap-2">
+          <button class="rounded-lg border border-[#0B0C0B] bg-white px-3 py-2 text-sm font-medium">+ Novo</button>
+          <button class="rounded-lg bg-[#0B0C0B] px-4 py-2 text-sm font-medium text-white">✓ Entregar Todos</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= OPTION 3 ========================= -->
+  <section>
+    <div class="mb-3 flex items-baseline gap-3">
+      <span class="rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold uppercase text-white">Opção 3</span>
+      <h2 class="text-lg font-semibold text-gray-900">Hierarquia por ação</h2>
+      <span class="text-xs text-gray-500">Foco na próxima ação do garçom; opções secundárias escondidas no ⋮</span>
+    </div>
+    <div class="card mx-auto max-w-2xl overflow-hidden rounded-2xl bg-white">
+      <div class="relative border-b border-gray-100 bg-white px-5 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0B0C0B] text-xl font-bold text-white">5</div>
+            <div>
+              <div class="font-semibold text-gray-900">Mesa 5</div>
+              <div class="mt-0.5 flex items-center gap-1.5 text-xs text-gray-500">
+                <span>Conta #42</span>
+                <span class="text-gray-300">·</span>
+                <span>aberta há 1h 12min</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="text-right">
+              <div class="text-[10px] uppercase tracking-wider text-gray-400">A pagar</div>
+              <div class="text-xl font-bold text-rose-600">R$ 184,50</div>
+            </div>
+            <button class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">⋮</button>
+          </div>
+        </div>
+        <!-- Inline menu example -->
+        <div class="absolute right-5 top-20 z-10 hidden w-48 rounded-xl border border-gray-100 bg-white p-1.5 shadow-lg">
+          <button class="block w-full rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50">+ Novo pedido</button>
+          <button class="block w-full rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50">↔ Mover conta</button>
+          <button class="block w-full rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50">📄 Histórico</button>
+        </div>
+      </div>
+
+      <!-- Primary block: pending -->
+      <div class="border-b border-amber-100 bg-amber-50/30 p-5">
+        <div class="mb-3 flex items-center justify-between">
+          <h3 class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
+            </span>
+            Próxima ação · 1 pendente
+          </h3>
+        </div>
+        <div class="rounded-xl border border-amber-200 bg-white p-4">
+          <div class="mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-sm font-bold text-amber-700">#3728</span>
+              <span class="rounded bg-sky-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-sky-700">QR</span>
+            </div>
+            <span class="text-[11px] text-gray-400">há 3min</span>
+          </div>
+          <div class="mb-3 text-sm text-gray-700">×2 X-Burguer, ×1 Coca 2L</div>
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-gray-900">R$ 74,50</span>
+            <div class="flex gap-2">
+              <button class="rounded-md bg-emerald-500 px-3 py-1.5 text-xs font-medium text-white">✓ Entregar</button>
+              <button class="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-xs text-gray-500">⋮</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collapsed other sections -->
+      <details class="border-b border-gray-100">
+        <summary class="cursor-pointer list-none px-5 py-3 text-xs font-semibold uppercase tracking-wider text-emerald-600 hover:bg-gray-50">
+          ▸ Entregues · 2 · R$ 110,00
+        </summary>
+      </details>
+      <details class="border-b border-gray-100">
+        <summary class="cursor-pointer list-none px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:bg-gray-50">
+          ▸ Cancelados · 0
+        </summary>
+      </details>
+
+      <!-- Sticky footer: contextual primary action -->
+      <div class="flex items-center justify-between bg-white px-5 py-3">
+        <button class="text-sm text-gray-500">Fechar</button>
+        <button class="rounded-lg bg-[#0B0C0B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800">
+          ✓ Entregar Todos (1)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pt-6 text-center text-xs text-gray-400">
+    Protótipos estáticos — apenas para comparação visual. Dados mock. Nenhum botão funcional.
+  </footer>
+</div>
+</body>
+</html>

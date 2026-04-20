@@ -7,6 +7,15 @@ export interface TranslatedField {
   es: string;
 }
 
+export type ProductVariation = {
+  id: number;
+  name: TranslatedField;
+  group: string;
+  additionalPrice: number;
+  outOfStock: boolean;
+  productId: number;
+};
+
 export type Product = {
   id: number;
   name: TranslatedField;
@@ -18,6 +27,8 @@ export type Product = {
   description: TranslatedField;
   categoryId: number;
   discount?: number;
+  tags?: string[];
+  ProductVariation?: ProductVariation[];
   variants?: Array<{
     name: TranslatedField;
     group: string;

@@ -42,6 +42,14 @@ export function TableCircle({
       badge: "bg-white text-rose-600 shadow-sm",
       timeBg: "bg-rose-600/90 text-white",
     },
+    occupied: {
+      bg: "bg-gradient-to-br from-blue-400 to-blue-500",
+      text: "text-white",
+      shadow: "shadow-blue-200",
+      ring: "ring-blue-300/50",
+      badge: "bg-white text-blue-600 shadow-sm",
+      timeBg: "bg-blue-600/90 text-white",
+    },
     empty: {
       bg: "bg-gradient-to-br from-gray-50 to-gray-100",
       text: "text-gray-400",

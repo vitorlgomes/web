@@ -16,6 +16,7 @@ import * as DashboardLayout from "../assets/dashboard-line.svg";
 import * as Sales from "../assets/money-dollar-circle-line.svg";
 import * as ShoppingBasket from "../assets/shopping-bag-black.svg";
 import * as Categories from "../assets/stack-fill.svg";
+import * as TableIcon from "../assets/table-line.svg";
 
 export function Sidebar() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export function Sidebar() {
                 <span className="h-4 font-normal">Pedidos</span>
               </Button>
             </Link>
-<Link className="mt-2" href="/dashboard/products">
+            <Link className="mt-2" href="/dashboard/products">
               <Button
                 variant="ghost"
                 size="sm"
@@ -77,6 +78,20 @@ export function Sidebar() {
                   className="h-5 w-5 text-[#BAAC7B]"
                 />
                 <span className="h-4 font-normal">Produtos</span>
+              </Button>
+            </Link>
+            <Link className="mt-2" href="/dashboard/tables">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex w-full items-center justify-start space-x-2 text-left"
+              >
+                <Image
+                  alt="Table icon"
+                  src={TableIcon}
+                  className="h-5 w-5 text-[#BAAC7B]"
+                />
+                <span className="h-4 font-normal">Mesas</span>
               </Button>
             </Link>
             <Link className="mt-2" href="/dashboard/categories">

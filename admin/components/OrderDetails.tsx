@@ -121,23 +121,7 @@ export function OrderDetails({ order, onOrderUpdated }: OrderDetailsProps) {
       setIsLoading(false);
     }
   };
-  const computedTotal = order.products.reduce((acc, product) => {
-    const productNameText = getTranslatedText(product.name);
-    const [, productPrice] = productNameText.split(":R$");
-    const price = parseFloat(productPrice?.replace(",", ".") || "0");
-    let subtotal = price * product.quantity;
-    if (product.productVariations && product.productVariations.length) {
-      subtotal += product.productVariations.reduce(
-        (vAcc, variation) =>
-          vAcc +
-          (variation.additionalPrice || 0) *
-            product.quantity *
-            (variation.quantity || 1),
-        0,
-      );
-    }
-    return acc + subtotal;
-  }, 0);
+  const formatBRL = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
   return (
     <DialogContent className="max-w-2xl">
@@ -203,17 +187,20 @@ export function OrderDetails({ order, onOrderUpdated }: OrderDetailsProps) {
         <TableBody>
           {order.products.map((product) => {
             const productNameText = getTranslatedText(product.name);
-            const [productName, productPrice] = productNameText.split(":R$");
-            const price = parseFloat(productPrice?.replace(",", ".") || "0");
+            const [rawName, productPrice] = productNameText.split(":R$");
+            const parsedPrice = parseFloat(
+              productPrice?.replace(",", ".") || "",
+            );
+            const hasPrice = !Number.isNaN(parsedPrice) && parsedPrice > 0;
             return [
               <TableRow key={`product-${product.id}`}>
-                <TableCell>{productName}</TableCell>
+                <TableCell>{rawName}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell className="p-2">
-                  R$ {price.toFixed(2).replace(".", ",")}
+                  {hasPrice ? formatBRL(parsedPrice) : "—"}
                 </TableCell>
                 <TableCell>
-                  R$ {(price * product.quantity).toFixed(2).replace(".", ",")}
+                  {hasPrice ? formatBRL(parsedPrice * product.quantity) : "—"}
                 </TableCell>
               </TableRow>,
               ...(product.productVariations?.map((variation) => {
@@ -228,10 +215,10 @@ export function OrderDetails({ order, onOrderUpdated }: OrderDetailsProps) {
                     </TableCell>
                     <TableCell className="text-sm">{varTotalQty}</TableCell>
                     <TableCell className="text-sm">
-                      + R$ {varPrice.toFixed(2).replace(".", ",")}
+                      + {formatBRL(varPrice)}
                     </TableCell>
                     <TableCell className="text-sm">
-                      R$ {(varPrice * varTotalQty).toFixed(2).replace(".", ",")}
+                      {formatBRL(varPrice * varTotalQty)}
                     </TableCell>
                   </TableRow>
                 );
@@ -242,9 +229,7 @@ export function OrderDetails({ order, onOrderUpdated }: OrderDetailsProps) {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
-            <TableCell>
-              R$ {computedTotal.toFixed(2).replace(".", ",")}
-            </TableCell>
+            <TableCell>{formatBRL(order.totalValue)}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
