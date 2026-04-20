@@ -4,7 +4,6 @@ import {
   ArrowRightLeft,
   Check,
   ChevronRight,
-  Clock,
   CreditCard,
   MoreVertical,
   Package,
@@ -79,13 +78,11 @@ export function TableDetails({
   const canceledCount = canceledOrders.length;
 
   const deliveredTotal = deliveredOrders.reduce((s, o) => s + o.totalValue, 0);
-  const pendingTotal = pendingOrders.reduce((s, o) => s + o.totalValue, 0);
   const canceledTotal = canceledOrders.reduce((s, o) => s + o.totalValue, 0);
   const unpaidOrders =
     table?.orders.filter(
       (o) => o.status !== "CANCELED" && o.paymentStatus === "UNPAID",
     ) ?? [];
-  const unpaidCount = unpaidOrders.length;
   const unpaidTotal = unpaidOrders.reduce((s, o) => s + o.totalValue, 0);
 
   const hasOpenTab = table?.tabStatus === "OPEN" && table?.tabId != null;
@@ -215,12 +212,6 @@ export function TableDetails({
     }
   };
 
-  const formatTime = (dateString: string) =>
-    new Date(dateString).toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
   const formatMoney = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
   const timeAgo = (dateString: string) => {
@@ -267,7 +258,7 @@ export function TableDetails({
     );
   };
 
-  const renderOrderRow = (order: TableOrder, _compact = false) => (
+  const renderOrderRow = (order: TableOrder) => (
     <details
       key={order.id}
       className="group rounded-lg border border-gray-100 bg-gray-50/60 open:bg-white"
@@ -601,7 +592,7 @@ export function TableDetails({
                   </div>
                 </summary>
                 <div className="space-y-1.5 px-5 pb-3">
-                  {deliveredOrders.map((o) => renderOrderRow(o, true))}
+                  {deliveredOrders.map((o) => renderOrderRow(o))}
                 </div>
               </details>
             )}
